@@ -1,0 +1,59 @@
+Result extension verification — local mock data, no fal calls
+PASS GET /result/local-result-extension: 200
+PASS SSR: Continue improving this video
+PASS SSR: 1080p
+PASS SSR: 4K
+PASS SSR: Denoise only
+PASS SSR: A larger file does not automatically mean better video quality
+PASS SSR: resolution increased from 960x540 to 1920x1080
+PASS result videos: no autoplay
+PASS recommendation: /restore-old-video 200
+PASS recommendation: /fix-blurry-video 200
+PASS recommendation: /video-upscaler 200
+PASS unauthorized result: 404
+PASS Edge: section visible, both videos paused, recommendation navigated to /video-upscaler
+PASS browser events saved in isolated SQLite:
+[
+  {
+    "eventType": "result_extension_click",
+    "path": "/result/local-result-extension",
+    "target": "/video-upscaler",
+    "records": 1,
+    "visibleMs": null
+  },
+  {
+    "eventType": "result_extension_impression",
+    "path": "/result/local-result-extension",
+    "target": null,
+    "records": 1,
+    "visibleMs": null
+  },
+  {
+    "eventType": "result_page_view",
+    "path": "/result/local-result-extension",
+    "target": null,
+    "records": 1,
+    "visibleMs": null
+  },
+  {
+    "eventType": "result_page_view",
+    "path": "/video-upscaler",
+    "target": null,
+    "records": 1,
+    "visibleMs": null
+  },
+  {
+    "eventType": "result_visible_time",
+    "path": "/result/local-result-extension",
+    "target": null,
+    "records": 1,
+    "visibleMs": 4741
+  },
+  {
+    "eventType": "result_visible_time",
+    "path": "/video-upscaler",
+    "target": null,
+    "records": 1,
+    "visibleMs": 6449
+  }
+]

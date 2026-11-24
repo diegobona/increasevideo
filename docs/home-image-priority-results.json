@@ -1,0 +1,64 @@
+{
+  "date": "2026-11-23",
+  "target": "http://127.0.0.1:3010/",
+  "environment": "Local production Next.js build; Microsoft Edge; Lighthouse 13.6.0 mobile; fresh browser cache each run; warm server image cache; identical simulated throttling",
+  "before": [
+    {
+      "run": 1,
+      "lcpMs": 930.7342999999998,
+      "cls": 0
+    },
+    {
+      "run": 2,
+      "lcpMs": 924.95935,
+      "cls": 0
+    },
+    {
+      "run": 3,
+      "lcpMs": 924.18655,
+      "cls": 0
+    }
+  ],
+  "after": [
+    {
+      "run": 1,
+      "lcpMs": 916.51905,
+      "cls": 0
+    },
+    {
+      "run": 2,
+      "lcpMs": 1207.8681000000001,
+      "cls": 0
+    },
+    {
+      "run": 3,
+      "lcpMs": 914.9697,
+      "cls": 0
+    }
+  ],
+  "median": {
+    "beforeLcpMs": 924.95935,
+    "afterLcpMs": 916.51905,
+    "beforeCls": 0,
+    "afterCls": 0
+  },
+  "networks": [
+    {
+      "run": 1,
+      "highPriorityImageRequests": 1,
+      "highPriorityImage": "http://127.0.0.1:3010/_next/image?url=%2Fdemos%2Fflowers-before.jpg&w=1920&q=75"
+    },
+    {
+      "run": 2,
+      "highPriorityImageRequests": 1,
+      "highPriorityImage": "http://127.0.0.1:3010/_next/image?url=%2Fdemos%2Fflowers-before.jpg&w=1920&q=75"
+    },
+    {
+      "run": 3,
+      "highPriorityImageRequests": 1,
+      "highPriorityImage": "http://127.0.0.1:3010/_next/image?url=%2Fdemos%2Fflowers-before.jpg&w=1920&q=75"
+    }
+  ],
+  "scope": "Two hero Image attributes only. Existing width/height 768x432, srcset 828/1920, layout and image files unchanged. Other four content images remain lazy.",
+  "deployed": false
+}

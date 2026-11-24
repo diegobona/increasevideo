@@ -1,0 +1,23 @@
+{
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "increasevideoquality-video",
+  "account_id": "c686d583b6d595875de1b8b73462fe42",
+  "main": "./video-worker.ts",
+  "compatibility_date": "2026-11-23",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": false,
+  "preview_urls": false,
+  "vars": {
+    "R2_ACCOUNT_ID": "c686d583b6d595875de1b8b73462fe42",
+    "R2_BUCKET_NAME": "video-input"
+  },
+  "containers": [{
+    "class_name": "VideoContainer",
+    "image": "../worker.Dockerfile",
+    "image_build_context": "..",
+    "instance_type": "basic",
+    "max_instances": 1
+  }],
+  "durable_objects": { "bindings": [{ "name": "VIDEO_CONTAINER", "class_name": "VideoContainer" }] },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["VideoContainer"] }]
+}

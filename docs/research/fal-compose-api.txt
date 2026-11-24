@@ -1,0 +1,7 @@
+Verified in Microsoft Edge on 2026-11-22
+Source: https://fal.ai/models/fal-ai/ffmpeg-api/compose/api
+Endpoint: fal-ai/ffmpeg-api/compose
+Input: tracks[] with id, type, keyframes[]. A video keyframe supplies url, timestamp and duration. Timestamp and duration use milliseconds. Exactly one visual track is required.
+Output: video_url and thumbnail_url.
+Trial clipping uses timestamp 0 and duration from pricing.free.maxDurationSec. The backend probes the clipped result before submitting it for enhancement.
+No real fal request was made during this implementation.

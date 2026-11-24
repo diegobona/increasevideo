@@ -1,0 +1,8 @@
+[PASS] /video-upscaler: HTTP 200; trailing slash follows the existing canonical redirect
+[PASS] Exact title; one H1: Video Upscaler
+[PASS] SSR without executing JavaScript: 25 paragraphs, all 6 FAQ questions and answers in raw HTML
+[PASS] Self canonical and sitemap URL: https://increasevideoquality.com/video-upscaler
+[PASS] 6 distinct content links; all homepage case anchors exist
+[PASS] Homepage AI story: one summary paragraph with link to new page; all H3 headings unchanged
+[PASS] Shared server FAQ component: homepage visible questions/answers still match JSON-LD (6/6)
+[PASS] pnpm lint; pnpm build; existing SSR checker 5/5 pages

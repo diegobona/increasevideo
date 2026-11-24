@@ -1,0 +1,11 @@
+# Prepare the native binding used by ESLint's import resolver.
+allowBuilds:
+  unrs-resolver@1.12.2: true
+  prisma@7.9.0: true
+  '@prisma/engines@7.9.0': true
+  esbuild@0.28.2: true
+  esbuild@0.27.3: true
+  sharp@0.34.5: true
+  workerd@1.20260430.1: true
+  workerd@1.20261117.1: true
+  workerd@1.20261119.1: true

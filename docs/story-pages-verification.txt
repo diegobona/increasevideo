@@ -1,0 +1,8 @@
+[PASS] /fix-blurry-video: HTTP 200; H1=1; main text 420 words; all paragraphs 598 words; SSR + canonical + sitemap + contextual links
+[PASS] /restore-old-video: HTTP 200; H1=1; main text 446 words; all paragraphs 628 words; SSR + canonical + sitemap + contextual links
+[PASS] /upscale-ai-clips-for-4k-editing: HTTP 200; H1=1; main text 438 words; all paragraphs 620 words; SSR + canonical + sitemap + contextual links
+[PASS] /fix-compressed-video: HTTP 200; H1=1; main text 439 words; all paragraphs 617 words; SSR + canonical + sitemap + contextual links
+[PASS] Homepage stories: 508 -> 128 words; exactly 4 keyword links; original headings retained
+[PASS] Each guide links in its body to all 3 other guides, Video Upscaler, and the homepage; Video Upscaler links back to all 4
+[PASS] Four original source pairs retained verbatim; four distinct titles; no publication dates added
+[PASS] pnpm lint; pnpm build; SSR checker 9/9 pages; Edge page and homepage link checks complete.

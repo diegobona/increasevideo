@@ -1,0 +1,34 @@
+[PASS] https://increasevideoquality.com/ (HTTP 200)
+  SSR: "Increase Video Quality" | "How it works" | "See it before you spend." | "A small preview." | "Your footage is the test." | "How much can I upscale a video?" | "How long does a one-minute video take to process?" | "Will you keep my original video?" | "Which video formats are supported?" | "How long can a free video be?" | "Are my video files safe?" | "Continue with Google" | "trial per Google account"
+  SEO: canonical + og:title + og:description + og:image; no NoScript; JSON-LD: SoftwareApplication + FAQPage (no aggregateRating)
+[PASS] https://increasevideoquality.com/video-upscaler (HTTP 200)
+  SSR: "Video Upscaler" | "Files you can upload" | "Preview the opening seconds before processing more" | "Check the download in your editing workflow" | "What to know before uploading" | "Video upscaling questions" | "Can I upscale any video to 4K?" | "Should I choose 1080p or 4K?" | "Which files can I use with the upscaler?" | "What does the free upscaling trial include?" | "Will upscaling fix every blurry detail?" | "Can I upload confidential footage?"
+  SEO: canonical + og:title + og:description + og:image; no NoScript
+[PASS] https://increasevideoquality.com/fix-blurry-video (HTTP 200)
+  SSR: "Fix Blurry Video Before Posting to TikTok" | "Why phone footage becomes blurry" | "What to compare before and after"
+  SEO: canonical + og:title + og:description + og:image; no NoScript
+[PASS] https://increasevideoquality.com/restore-old-video (HTTP 200)
+  SSR: "Restore Old Video Without Losing Its Character" | "Why older recordings lose clarity" | "What a useful restoration looks like"
+  SEO: canonical + og:title + og:description + og:image; no NoScript
+[PASS] https://increasevideoquality.com/upscale-ai-clips-for-4k-editing (HTTP 200)
+  SSR: "Upscale AI Clips for 4K Editing" | "Why a larger AI frame can still look soft" | "Compare the sequence, not just the best frame"
+  SEO: canonical + og:title + og:description + og:image; no NoScript
+[PASS] https://increasevideoquality.com/fix-compressed-video (HTTP 200)
+  SSR: "Fix Compressed Video Before Your Next Export" | "Why repeated compression removes detail" | "Look for a cleaner export without false texture"
+  SEO: canonical + og:title + og:description + og:image; no NoScript
+[PASS] https://increasevideoquality.com/pricing (HTTP 200)
+  SSR: "A simple time pack." | "How your time is counted"
+  SEO: canonical + og:title + og:description + og:image; no NoScript
+[PASS] https://increasevideoquality.com/about (HTTP 200)
+  SSR: "About Increase Video Quality" | "Coldstone Technology Co., Ltd." | "Why we are building it" | "The site is in active development." | "Free trials require Google sign-in." | "with a watermark" | "Automatic deletion of completed uploads is not yet implemented." | "Do not upload sensitive or confidential videos."
+  SEO: canonical + og:title + og:description + og:image; no NoScript
+[PASS] https://increasevideoquality.com/contact (HTTP 200)
+  SSR: "Contact" | "Coldstone Technology Co., Ltd." | "zw83716@gmail.com" | "For a payment question"
+  SEO: canonical + og:title + og:description + og:image; no NoScript
+[PASS] https://increasevideoquality.com/privacy (HTTP 200)
+  SSR: "Privacy" | "Storage and access"
+  SEO: canonical + og:title + og:description + og:image; no NoScript
+[PASS] https://increasevideoquality.com/terms (HTTP 200)
+  SSR: "Terms" | "Paid time packs"
+  SEO: canonical + og:title + og:description + og:image; no NoScript
+SSR check: 11/11 passed.

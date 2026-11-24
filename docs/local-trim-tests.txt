@@ -1,0 +1,199 @@
+$ node --conditions=react-server --import tsx --test --test-concurrency=1 src/libs/video/*.test.ts tests/*.test.mjs tests/*.test.ts
+✔ 4 seconds is within the free duration limit (1.3584ms)
+✔ 6 seconds returns FREE_LIMIT_DURATION with readable copy (0.1592ms)
+✔ 720p is within the free resolution limit (0.1245ms)
+✔ 1080p is accepted and larger dimensions return FREE_LIMIT_RESOLUTION (0.1302ms)
+✔ an extremely wide output cannot bypass the free resolution ceiling (1.0038ms)
+✔ exactly 5 seconds and 720p are accepted (0.2274ms)
+✔ free videos cannot disable the watermark (0.1959ms)
+✔ invalid metadata cannot pass a free-tier check (0.2256ms)
+✔ SSR check accepts a question rendered in server HTML (1.4203ms)
+✔ equivalent root canonicals pass with or without a trailing slash (0.2717ms)
+✔ a question present only in JSON-LD or hydration scripts does not pass (0.77ms)
+✔ NoScript placeholders fail even when keywords are present (0.1351ms)
+✔ missing metadata fails the check (0.2199ms)
+(node:42504) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ migrations create four business tables and persistent rate limit infrastructure (20.176ms)
+✔ video jobs accept both supported scales and start pending (12.9597ms)
+✔ SQLite rejects unsupported scales and job statuses (11.9059ms)
+✔ target resolution migration preserves existing jobs, leases and attribution links (10.8093ms)
+✔ anonymous result tokens identify exactly one job (11.7906ms)
+✔ pending orders may lack a payment intent and enforce session uniqueness (11.445ms)
+✔ SQLite rejects unsupported plans and order statuses (11.3436ms)
+✔ free grants, paid grants, and deductions sum through the credit ledger (9.4285ms)
+✔ attribution permits visits before jobs and survives job deletion (10.3439ms)
+✔ only authenticated worker output with a watermark confirmation is saved to R2 (19.9749ms)
+✔ failed, unmarked and non-video worker responses are not stored (1.9379ms)
+✔ unavailable watermark worker is detected before an enhancement can start (0.9292ms)
+✔ Google callback issues a secure hashed session and exactly one persistent trial grant (150.2805ms)
+✔ wrong, missing, expired and replayed OAuth state cannot log in (22.7283ms)
+✔ Google ID token signature, issuer, audience, expiry, nonce and verified email are checked (55.5637ms)
+✔ guest cookies or a forged account ID cannot upload, inspect video, submit or buy (11.9086ms)
+✔ a five-second trial succeeds once; relogin and changed visitor cookies cannot replenish it (24.496ms)
+✔ server rejects a free upload over sixty seconds despite forged client metadata (8.4055ms)
+✔ parallel logins for one subject grant once; another Google account has its own allowance (9.9164ms)
+✔ guest balance is zero and legacy visitor IDs cannot receive new free grants (2.426ms)
+✔ signout revokes the server session, rejects cross-site requests and does not reset the grant (14.9243ms)
+✔ return destinations are restricted to local application pages (1.3509ms)
+✔ client polls every configured interval and stops once a result arrives (13.0076ms)
+✔ polling stops at the deadline; retry checks the same job without a new POST (6.271ms)
+✔ concurrent polls finalize a free video only once (289.6163ms)
+✔ finished video checkpoints survive metadata retries without repeating watermark processing (17.6553ms)
+✔ submit → poll → success persists resultUrl with real SQLite and a mock provider (20.6386ms)
+✔ another owner's cookie is rejected with 403 before contacting the provider (17.1587ms)
+✔ existing ledger credits are used without granting a second free allowance (12.7817ms)
+✔ a visitor gets one ledger grant: their second free submission returns 402 (14.6943ms)
+✔ concurrent requests cannot spend the same free credit twice (13.5269ms)
+✔ server re-probes the video and rejects free duration violations without a debit (6.6669ms)
+✔ a 60-second free upload enhances only its verified first five seconds (14.521ms)
+✔ a nine-second upload uses the trim adapter and submits only the verified five-second clip (12.6459ms)
+✔ clips of five seconds or less are enhanced in full without a minimum upload duration (24.3742ms)
+✔ free jobs cap the provider output at 1080p before inference using verified clip dimensions (24.8185ms)
+✔ free target-resolution requests ignore forged scale and reject paid-only targets before charging (8.8986ms)
+video_job_submission_failed {
+  jobId: 'cmwry2oem0017r4t8g9w1wk92',
+  stage: 'trim',
+  code: 'VIDEO_TRIM_FAILED',
+  original: { durationSec: 15, width: 640, height: 360 },
+  processedDurationSec: 5
+}
+video_job_submission_failed {
+  jobId: 'cmwry2of00019r4t8hdbfc90p',
+  stage: 'validation',
+  code: 'TRIAL_CLIP_DURATION',
+  original: { durationSec: 15, width: 640, height: 360 },
+  clip: { durationSec: 15, width: 640, height: 360 },
+  processedDurationSec: 5
+}
+✔ a failed or oversized trim never reaches enhancement and restores the trial (24.4935ms)
+✔ trim failures identify the failed stage without exposing private URLs (10.6867ms)
+✔ oversized trial clips report measured duration and never reach enhancement (9.0456ms)
+✔ submission preserves safe provider errors and refunds the trial (11.466ms)
+video_job_submission_failed {
+  jobId: 'cmwry2og9001hr4t8xv4l2fdo',
+  stage: 'submit',
+  code: 'PROVIDER_SUBMIT_FAILED',
+  original: { durationSec: 4, width: 640, height: 360 },
+  processedDurationSec: 4
+}
+✔ provider submission failures fail the job and refund through the ledger (12.4174ms)
+✔ a failed processing job refunds exactly once across repeated polls (12.6646ms)
+✔ free results above the output limit are rejected and refunded (16.2117ms)
+✔ 20 submissions with one visitor are blocked from the fourth request (39.4764ms)
+✔ new cookies cannot bypass the IP hourly limit (55.2985ms)
+✔ a forged body visitorId cannot reset a cookie owner's ledger (11.4336ms)
+✔ recreating handlers does not reset persisted request limits (12.4111ms)
+✖ tests\jobs.test.ts (1159.8943ms)
+✔ Checkout → signed webhook → paid enhancement → result persists without using free credits (188.9548ms)
+✔ paid resolution choice charges and persists a server-calculated fractional upscale (171.0801ms)
+✔ paid submission accepts longer footage, removes watermark, and persists the output (17.7384ms)
+✔ paid intent or body visitorId never grants paid access without settled credit (6.2717ms)
+✔ 4K is charged from actual scaled output even if the client claims 1080p (14.1108ms)
+✔ paid balances exclude pending, expired, and legacy orders without expiry (10.0476ms)
+✔ paid spends cannot consume a free credit and free spends cannot consume paid time (15.0492ms)
+✔ a job can spend multiple orders FIFO and failed processing refunds those same pools exactly once (21.825ms)
+✔ concurrent paid jobs cannot spend the same three credits twice (13.4652ms)
+✔ refund debt on a refunded or expired order offsets new paid purchases (10.1294ms)
+video_job_submission_failed {
+  jobId: 'cmwry2pmn000me8t8iuayvfmo',
+  stage: 'submit',
+  code: 'PROVIDER_SUBMIT_FAILED',
+  original: { durationSec: 30, width: 960, height: 540 },
+  processedDurationSec: 30
+}
+✔ a failed submission refunds paid time but does not issue a free allowance (17.2609ms)
+✔ fal frame counts expose an understated frame rate instead of trusting client fps (1.0411ms)
+✔ a paid result larger than its server quote is failed and refunded (14.6769ms)
+✔ missing or high server fps prevents paid submissions before any debit (14.7772ms)
+✔ processing failure after a grant expires records a refund without restoring spendable time (15.0259ms)
+✔ settled refund debt is not charged again when the paying order expires (13.8082ms)
+✔ Checkout uses only configured prices and cookie identity, and never grants credits before payment (159.2946ms)
+✔ missing Stripe keys return an explicit 503 without creating an order (6.8212ms)
+✔ Checkout refuses real charging when webhook configuration is missing (12.0913ms)
+✔ signed paid webhook grants once across duplicate and concurrent events (20.0883ms)
+✔ forged signatures, prices, currencies, order IDs and session IDs cannot grant credits (12.7387ms)
+✔ partial and full refunds revoke only the new cumulative amount; paid replay never restores refunded credits (32.5497ms)
+✔ refund delivered before paid cannot be lost or followed by a full grant (19.7079ms)
+✔ unknown refunds are retryable and unknown event types are harmless (3.4392ms)
+✔ a refund with a mismatched payment intent, amount or currency never revokes credits (14.0137ms)
+✔ signed webhook body size is bounded before parsing and no visitor cookie is issued (2.3286ms)
+✔ checkout has persistent visitor and IP throttles with Retry-After (23.2956ms)
+✔ pricing defines the advertised free allowance and paid credit packs (1.0492ms)
+✔ paid packs grant the agreed standard seconds with bounded output and expiry (0.1488ms)
+✔ existing upload and validation callers share the canonical plan settings (0.0887ms)
+✔ abuse limits apply to both visitor identity and IP (0.078ms)
+✔ free Topaz jobs finish through the watermark worker without a custom fal model (15.2822ms)
+✔ watermark worker failures never expose the unmarked Topaz result (0.921ms)
+✔ Topaz accepts a fractional server-capped scale without enabling frame interpolation (1.0121ms)
+✔ FalProvider submits the requested upscale/denoise/watermark and resolves queue results (1.2414ms)
+✔ plain Topaz requests use documented inputs and owner/app queue URLs (0.6585ms)
+✔ free jobs require a configured watermark pipeline and never silently return unwatermarked output (0.7408ms)
+✔ paid quotes charge standard output time, rounded to whole credits (1.2977ms)
+✔ portrait video uses long and short edges for standard and 4K limits (0.1457ms)
+✔ paid quotes reject unknown or expensive frame rates and oversized output (0.6762ms)
+✔ hourly sliding windows reopen at expiry and Retry-After counts down (138.2782ms)
+✔ concurrent checks atomically admit only three requests for one visitor (12.2896ms)
+✔ metadata permits six visitor requests and uses server metadata (39.739ms)
+✔ metadata also has a shared IP ceiling across visitor cookies (29.5886ms)
+✔ target resolutions calculate the actual factor from server dimensions (1.7124ms)
+✔ target resolutions preserve portrait and non-widescreen proportions (0.1457ms)
+✔ unsupported targets are rejected instead of promising a different output (0.1136ms)
+✔ target quotes use predicted dimensions and keep the existing paid rates (0.2418ms)
+✔ owned results use actual output dimensions rather than multiplying by the selected scale (114.3072ms)
+✔ a clipped trial describes the processed five seconds rather than the whole upload (1.4222ms)
+✔ a capped result does not claim its resolution increased (0.9252ms)
+✔ missing jobs and incorrect owner tokens cannot read result details (3.3624ms)
+✔ legacy completed jobs probe and persist output dimensions on the server (9.1585ms)
+✔ owned downloads stream a video attachment; another cookie cannot fetch the file (15.9605ms)
+✔ private R2 result downloads renew expired links after checking ownership (4.1211ms)
+✔ Stripe signatures require the unmodified body and a recent timestamp (1.2552ms)
+✔ missing Stripe configuration fails clearly without a network request (0.1743ms)
+✔ Checkout sends server prices in USD with order-bound idempotency and trusted return URLs (13.1208ms)
+✔ free upload accepts up to sixty seconds but its output remains capped at five (0.6347ms)
+✔ trial clipping uses the authenticated local worker and stores its output without calling fal (18.3535ms)
+✔ failed or unconfirmed worker clips cannot be stored or submitted (1.3997ms)
+✔ metadata reads 30 seconds from fal and ignores forged client duration/resolution (279.6271ms)
+✔ metadata limits one IP to 20 requests in a sliding minute (60.0263ms)
+✔ metadata accepts a sixty-second trial upload and reports a five-second preview (3.5219ms)
+✔ forwarded IP spoofing does not bypass the limiter on an untrusted origin (60.3823ms)
+✔ a sliding window expires correctly without allowing a minute-boundary burst (0.2455ms)
+✔ metadata rejects invalid URLs before calling fal (14.7266ms)
+✔ metadata rejects audio, malformed provider output and unsupported containers (13.6491ms)
+✔ missing fal credentials return a clear 503 without accepting client metadata (3.6584ms)
+✔ file validation enforces strictly less than 500 MB (0.5135ms)
+✔ upload signs an immutable private R2 PUT with the exact content length (10.249ms)
+✔ metadata verifies the actual R2 object before asking fal (6.9742ms)
+✔ metadata rejects an oversized actual R2 object even if the client claimed a small file (11.1551ms)
+✔ multipart files stream into bounded R2 parts and return a signed read URL (69.1244ms)
+✔ failed R2 part uploads abort the incomplete multipart upload (5.1043ms)
+✔ upload API is rate limited too (16.4155ms)
+✔ result pages can renew an R2 input URL without making the bucket public (1.6203ms)
+✔ video worker provides an authenticated, limited processing handler (5.8338ms)
+✔ FFmpeg arguments burn a watermark and strictly cap size and duration without a shell (0.3257ms)
+✔ worker rate limits and concurrent processing return Retry-After (2.7781ms)
+✔ worker trims only its own R2 uploads with bounded durations and authentication (2.7279ms)
+✔ trim arguments re-encode to a strict frame boundary without watermarking (0.1193ms)
+✔ first visit receives a server-generated UUID in an HttpOnly cookie (2.7227ms)
+✔ a valid existing visitor cookie is reused without resetting it (0.7345ms)
+✔ invalid visitor cookies are replaced and do not become a ledger identity (0.4718ms)
+✔ HTTPS visitor cookies are Secure and preserve other response cookies (0.2763ms)
+✔ UUID case is canonicalized to avoid multiple ledger identities (0.2934ms)
+✔ middleware forwards the newly issued cookie to the current API request (2.1162ms)
+✔ middleware does not reset a visitor on a later page visit (0.3887ms)
+✔ checkout can renew the same visitor identity beyond a paid pack's validity (0.3147ms)
+ℹ tests 152
+ℹ suites 0
+ℹ pass 151
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 10247.2167
+
+✖ failing tests:
+
+test at tests\jobs.test.ts:1:1
+✖ tests\jobs.test.ts (1159.8943ms)
+  'test failed'
+[ELIFECYCLE] Test failed. See above for more details.

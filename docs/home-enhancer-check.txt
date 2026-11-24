@@ -1,0 +1,5 @@
+[PASS] Title (62 characters): Increase Video Quality Free Trial | AI Video Enhancer up to 4K
+[PASS] H1 unchanged: Increase Video Quality (one H1)
+[PASS] Step 2: Preview your clip with our video quality enhancer, then play the original and result side by side. Check moving details as well as a paused frame.
+[PASS] Step 3: Ready to enhance video quality online? Choose a one-time pack to process more footage without a watermark. Review the credit cost before submitting.
+[PASS] Homepage SSR, canonical, Open Graph, FAQ and SoftwareApplication checks.

@@ -1,0 +1,11 @@
+{
+  "name": "increasevideoquality-db-migrations",
+  "account_id": "c686d583b6d595875de1b8b73462fe42",
+  "compatibility_date": "2026-11-23",
+  "d1_databases": [{
+    "binding": "DB",
+    "database_name": "increasevideoquality-db",
+    "database_id": "b9f9bdba-7964-432d-a186-46793967dd42",
+    "migrations_dir": "./migrations"
+  }]
+}

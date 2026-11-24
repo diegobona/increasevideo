@@ -1,0 +1,40 @@
+Public domain indexing check (curl GET)
+[PASS] /: HTTP 200; canonical = og:url = https://increasevideoquality.com/; no preview host or noindex
+[PASS] /video-upscaler: HTTP 200; canonical = og:url = https://increasevideoquality.com/video-upscaler; no preview host or noindex
+[PASS] /fix-blurry-video: HTTP 200; canonical = og:url = https://increasevideoquality.com/fix-blurry-video; no preview host or noindex
+[PASS] /restore-old-video: HTTP 200; canonical = og:url = https://increasevideoquality.com/restore-old-video; no preview host or noindex
+[PASS] /upscale-ai-clips-for-4k-editing: HTTP 200; canonical = og:url = https://increasevideoquality.com/upscale-ai-clips-for-4k-editing; no preview host or noindex
+[PASS] /fix-compressed-video: HTTP 200; canonical = og:url = https://increasevideoquality.com/fix-compressed-video; no preview host or noindex
+[PASS] /pricing: HTTP 200; canonical = og:url = https://increasevideoquality.com/pricing; no preview host or noindex
+[PASS] /about: HTTP 200; canonical = og:url = https://increasevideoquality.com/about; no preview host or noindex
+[PASS] /contact: HTTP 200; canonical = og:url = https://increasevideoquality.com/contact; no preview host or noindex
+[PASS] /privacy: HTTP 200; canonical = og:url = https://increasevideoquality.com/privacy; no preview host or noindex
+[PASS] /terms: HTTP 200; canonical = og:url = https://increasevideoquality.com/terms; no preview host or noindex
+[PASS] robots.txt: HTTP 200; Sitemap: https://increasevideoquality.com/sitemap.xml
+[PASS] sitemap.xml: HTTP 200; 11 production URLs; all 5 new URLs present
+[PASS] HTTP redirect /: 301 -> https://increasevideoquality.com/
+[PASS] HTTP redirect /video-upscaler: 301 -> https://increasevideoquality.com/video-upscaler
+[PASS] HTTP redirect /fix-blurry-video: 301 -> https://increasevideoquality.com/fix-blurry-video
+[PASS] HTTP redirect /restore-old-video: 301 -> https://increasevideoquality.com/restore-old-video
+[PASS] HTTP redirect /upscale-ai-clips-for-4k-editing: 301 -> https://increasevideoquality.com/upscale-ai-clips-for-4k-editing
+[PASS] HTTP redirect /fix-compressed-video: 301 -> https://increasevideoquality.com/fix-compressed-video
+[PASS] Trailing slash /video-upscaler/: HTTP 200; canonical https://increasevideoquality.com/video-upscaler
+[PASS] Trailing slash /fix-blurry-video/: HTTP 200; canonical https://increasevideoquality.com/fix-blurry-video
+[PASS] Trailing slash /restore-old-video/: HTTP 200; canonical https://increasevideoquality.com/restore-old-video
+[PASS] Trailing slash /upscale-ai-clips-for-4k-editing/: HTTP 200; canonical https://increasevideoquality.com/upscale-ai-clips-for-4k-editing
+[PASS] Trailing slash /fix-compressed-video/: HTTP 200; canonical https://increasevideoquality.com/fix-compressed-video
+[PASS] Preview /: HTTP 200; X-Robots-Tag: noindex, follow
+[PASS] Preview /video-upscaler: HTTP 200; X-Robots-Tag: noindex, follow
+[PASS] Preview /fix-blurry-video: HTTP 200; X-Robots-Tag: noindex, follow
+[PASS] Preview /restore-old-video: HTTP 200; X-Robots-Tag: noindex, follow
+[PASS] Preview /upscale-ai-clips-for-4k-editing: HTTP 200; X-Robots-Tag: noindex, follow
+[PASS] Preview /fix-compressed-video: HTTP 200; X-Robots-Tag: noindex, follow
+[PASS] Preview /pricing: HTTP 200; X-Robots-Tag: noindex, follow
+[PASS] Preview /about: HTTP 200; X-Robots-Tag: noindex, follow
+[PASS] Preview /contact: HTTP 200; X-Robots-Tag: noindex, follow
+[PASS] Preview /privacy: HTTP 200; X-Robots-Tag: noindex, follow
+[PASS] Preview /terms: HTTP 200; X-Robots-Tag: noindex, follow
+[PASS] Preview /sitemap.xml: HTTP 200; X-Robots-Tag: noindex, follow
+[PASS] Preview /robots.txt: HTTP 200; X-Robots-Tag: noindex, follow
+[PASS] Preview /favicon.svg: HTTP 200; X-Robots-Tag: noindex, follow
+Domain indexing check: ALL PASSED

@@ -1,0 +1,3 @@
+[PASS] / HTTP 200; one PVUV script in head; correct site ID/API; downloads off
+[PASS] /video-upscaler HTTP 200; one PVUV script in head; correct site ID/API; downloads off
+[PASS] /privacy HTTP 200; one PVUV script in head; correct site ID/API; downloads off

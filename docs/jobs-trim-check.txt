@@ -1,0 +1,176 @@
+TAP version 13
+# Subtest: concurrent polls finalize a free video only once
+ok 1 - concurrent polls finalize a free video only once
+  ---
+  duration_ms: 287.7372
+  type: 'test'
+  ...
+# Subtest: finished video checkpoints survive metadata retries without repeating watermark processing
+ok 2 - finished video checkpoints survive metadata retries without repeating watermark processing
+  ---
+  duration_ms: 16.9018
+  type: 'test'
+  ...
+# Subtest: submit → poll → success persists resultUrl with real SQLite and a mock provider
+ok 3 - submit → poll → success persists resultUrl with real SQLite and a mock provider
+  ---
+  duration_ms: 19.5452
+  type: 'test'
+  ...
+# Subtest: another owner's cookie is rejected with 403 before contacting the provider
+ok 4 - another owner's cookie is rejected with 403 before contacting the provider
+  ---
+  duration_ms: 15.8748
+  type: 'test'
+  ...
+# Subtest: existing ledger credits are used without granting a second free allowance
+ok 5 - existing ledger credits are used without granting a second free allowance
+  ---
+  duration_ms: 13.2992
+  type: 'test'
+  ...
+# Subtest: a visitor gets one ledger grant: their second free submission returns 402
+ok 6 - a visitor gets one ledger grant: their second free submission returns 402
+  ---
+  duration_ms: 14.6503
+  type: 'test'
+  ...
+# Subtest: concurrent requests cannot spend the same free credit twice
+ok 7 - concurrent requests cannot spend the same free credit twice
+  ---
+  duration_ms: 14.9806
+  type: 'test'
+  ...
+# Subtest: server re-probes the video and rejects free duration violations without a debit
+ok 8 - server re-probes the video and rejects free duration violations without a debit
+  ---
+  duration_ms: 9.4289
+  type: 'test'
+  ...
+# Subtest: a 60-second free upload enhances only its verified first five seconds
+ok 9 - a 60-second free upload enhances only its verified first five seconds
+  ---
+  duration_ms: 21.694
+  type: 'test'
+  ...
+# Subtest: a nine-second upload uses the trim adapter and submits only the verified five-second clip
+ok 10 - a nine-second upload uses the trim adapter and submits only the verified five-second clip
+  ---
+  duration_ms: 24.4741
+  type: 'test'
+  ...
+# Subtest: clips of five seconds or less are enhanced in full without a minimum upload duration
+ok 11 - clips of five seconds or less are enhanced in full without a minimum upload duration
+  ---
+  duration_ms: 33.3265
+  type: 'test'
+  ...
+# Subtest: free jobs cap the provider output at 1080p before inference using verified clip dimensions
+ok 12 - free jobs cap the provider output at 1080p before inference using verified clip dimensions
+  ---
+  duration_ms: 23.4584
+  type: 'test'
+  ...
+# Subtest: free target-resolution requests ignore forged scale and reject paid-only targets before charging
+ok 13 - free target-resolution requests ignore forged scale and reject paid-only targets before charging
+  ---
+  duration_ms: 10.2753
+  type: 'test'
+  ...
+# video_job_submission_failed {
+#   jobId: 'cmwry23fw00172st882q72z3w',
+#   stage: 'trim',
+#   code: 'VIDEO_TRIM_FAILED',
+#   original: { durationSec: 15, width: 640, height: 360 },
+#   processedDurationSec: 5
+# }
+# video_job_submission_failed {
+#   jobId: 'cmwry23g800192st8zk8ytdxb',
+#   stage: 'validation',
+#   code: 'TRIAL_CLIP_DURATION',
+#   original: { durationSec: 15, width: 640, height: 360 },
+#   clip: { durationSec: 15, width: 640, height: 360 },
+#   processedDurationSec: 5
+# }
+# Subtest: a failed or oversized trim never reaches enhancement and restores the trial
+ok 14 - a failed or oversized trim never reaches enhancement and restores the trial
+  ---
+  duration_ms: 20.9034
+  type: 'test'
+  ...
+# Subtest: trim failures identify the failed stage without exposing private URLs
+ok 15 - trim failures identify the failed stage without exposing private URLs
+  ---
+  duration_ms: 10.1926
+  type: 'test'
+  ...
+# Subtest: oversized trial clips report measured duration and never reach enhancement
+ok 16 - oversized trial clips report measured duration and never reach enhancement
+  ---
+  duration_ms: 9.4709
+  type: 'test'
+  ...
+# Subtest: submission preserves safe provider errors and refunds the trial
+ok 17 - submission preserves safe provider errors and refunds the trial
+  ---
+  duration_ms: 9.7729
+  type: 'test'
+  ...
+# video_job_submission_failed {
+#   jobId: 'cmwry23he001h2st8iegqd8bz',
+#   stage: 'submit',
+#   code: 'PROVIDER_SUBMIT_FAILED',
+#   original: { durationSec: 4, width: 640, height: 360 },
+#   processedDurationSec: 4
+# }
+# Subtest: provider submission failures fail the job and refund through the ledger
+ok 18 - provider submission failures fail the job and refund through the ledger
+  ---
+  duration_ms: 11.9237
+  type: 'test'
+  ...
+# Subtest: a failed processing job refunds exactly once across repeated polls
+ok 19 - a failed processing job refunds exactly once across repeated polls
+  ---
+  duration_ms: 14.0933
+  type: 'test'
+  ...
+# Subtest: free results above the output limit are rejected and refunded
+ok 20 - free results above the output limit are rejected and refunded
+  ---
+  duration_ms: 15.4403
+  type: 'test'
+  ...
+# Subtest: 20 submissions with one visitor are blocked from the fourth request
+ok 21 - 20 submissions with one visitor are blocked from the fourth request
+  ---
+  duration_ms: 42.4774
+  type: 'test'
+  ...
+# Subtest: new cookies cannot bypass the IP hourly limit
+ok 22 - new cookies cannot bypass the IP hourly limit
+  ---
+  duration_ms: 58.3937
+  type: 'test'
+  ...
+# Subtest: a forged body visitorId cannot reset a cookie owner's ledger
+ok 23 - a forged body visitorId cannot reset a cookie owner's ledger
+  ---
+  duration_ms: 14.3915
+  type: 'test'
+  ...
+# Subtest: recreating handlers does not reset persisted request limits
+ok 24 - recreating handlers does not reset persisted request limits
+  ---
+  duration_ms: 14.421
+  type: 'test'
+  ...
+1..24
+# tests 24
+# suites 0
+# pass 24
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1211.1174

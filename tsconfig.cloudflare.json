@@ -1,0 +1,6 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": { "incremental": false },
+  "include": ["cloudflare.config.ts", "cloudflare/**/*.ts", "src/libs/db/cloudflare.ts", "src/libs/db/cloudflare-platform.ts", ".cloudflare/types"],
+  "exclude": ["node_modules"]
+}

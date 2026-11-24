@@ -1,0 +1,14 @@
+[PASS] href="/video-upscaler": 3 server-rendered links
+  Anchors: Video upscaler | video upscaler guide | Video upscaler
+[PASS] href="/fix-blurry-video": 2 server-rendered links
+  Anchors: Fix blurry phone footage before posting to TikTok | Fix blurry video
+[PASS] href="/restore-old-video": 2 server-rendered links
+  Anchors: bring an old recording back into focus | Restore old video
+[PASS] href="/upscale-ai-clips-for-4k-editing": 2 server-rendered links
+  Anchors: prepare AI footage for a 4K timeline | Upscale AI clips for 4K editing
+[PASS] href="/fix-compressed-video": 2 server-rendered links
+  Anchors: Clean up the softness left by video compression | Fix compressed video
+[PASS] header: Video upscaler link
+[PASS] footer: Video upscaler link
+[PASS] All 4 scenario cards retained.
+Home links check: ALL PASSED

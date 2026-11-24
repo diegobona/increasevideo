@@ -1,0 +1,7 @@
+[PASS] /about and /contact: HTTP 200; one H1; self canonical; server-rendered body
+[PASS] About: confirmed operator + real purpose + development stage + Google sign-in + 5-second watermarked trial + no automatic deletion
+[PASS] Contact: owner-provided mailto:zw83716@gmail.com; no form; old unconfirmed address absent
+[PASS] Exactly one footer with About and Contact on 13 pages: 11 public pages, login, and the unmatched-route 404 page
+[PASS] sitemap.xml includes /about and /contact
+[PASS] pnpm lint; pnpm build; SSR checker 11/11
+[NOTE] Authenticated result and payment views inherit the root layout; real authenticated flows were not exercised. Invalid result/payment requests return the existing framework 404 error document.

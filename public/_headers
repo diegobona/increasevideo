@@ -1,0 +1,3 @@
+# Static assets bypass Next.js middleware. Restrict this rule to preview hosts.
+https://:worker.:account.workers.dev/*
+  X-Robots-Tag: noindex, follow

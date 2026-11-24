@@ -1,0 +1,122 @@
+{
+  "canonicalOrigin": "https://increasevideoquality.com",
+  "pages": [
+    {
+      "path": "/",
+      "keywords": [
+        "Increase Video Quality",
+        "How it works",
+        "See it before you spend.",
+        "What actually improves when you increase video quality",
+        "How much can I upscale a video?",
+        "How long does a one-minute video take to process?",
+        "Will you keep my original video?",
+        "Which video formats are supported?",
+        "How long can a free video be?",
+        "Are my video files safe?",
+        "Continue with Google",
+        "trial per Google account"
+      ],
+      "jsonLdTypes": [
+        "SoftwareApplication",
+        "FAQPage"
+      ],
+      "disallowAggregateRating": true
+    },
+    {
+      "path": "/video-upscaler",
+      "keywords": [
+        "Video Upscaler",
+        "Files you can upload",
+        "Preview the opening seconds before processing more",
+        "Check the download in your editing workflow",
+        "What to know before uploading",
+        "Video upscaling questions",
+        "Can I upscale any video to 4K?",
+        "Should I choose 1080p or 4K?",
+        "Which files can I use with the upscaler?",
+        "What does the free upscaling trial include?",
+        "Will upscaling fix every blurry detail?",
+        "Can I upload confidential footage?"
+      ]
+    },
+    {
+      "path": "/fix-blurry-video",
+      "keywords": [
+        "Fix Blurry Video Before Posting to TikTok",
+        "Why phone footage becomes blurry",
+        "What to compare before and after"
+      ]
+    },
+    {
+      "path": "/restore-old-video",
+      "keywords": [
+        "Restore Old Video Without Losing Its Character",
+        "Why older recordings lose clarity",
+        "What a useful restoration looks like"
+      ]
+    },
+    {
+      "path": "/upscale-ai-clips-for-4k-editing",
+      "keywords": [
+        "Upscale AI Clips for 4K Editing",
+        "Why a larger AI frame can still look soft",
+        "Compare the sequence, not just the best frame"
+      ]
+    },
+    {
+      "path": "/fix-compressed-video",
+      "keywords": [
+        "Fix Compressed Video Before Your Next Export",
+        "Why repeated compression removes detail",
+        "Look for a cleaner export without false texture"
+      ]
+    },
+    {
+      "path": "/pricing",
+      "keywords": [
+        "Video upscaling packs",
+        "Best value",
+        "Credits per clip",
+        "When do my credits expire?",
+        "Credits used for a failed job are returned automatically."
+      ]
+    },
+    {
+      "path": "/about",
+      "keywords": [
+        "About Increase Video Quality",
+        "Coldstone Technology Co., Ltd.",
+        "Why we are building it",
+        "The site is in active development.",
+        "Free trials require Google sign-in.",
+        "with a watermark",
+        "New uploads are kept for 7 days.",
+        "Do not upload sensitive or confidential videos."
+      ]
+    },
+    {
+      "path": "/contact",
+      "keywords": [
+        "Contact",
+        "Coldstone Technology Co., Ltd.",
+        "zw83716@gmail.com",
+        "For a payment question"
+      ]
+    },
+    {
+      "path": "/privacy",
+      "keywords": [
+        "Privacy",
+        "Storage and access"
+      ]
+    },
+    {
+      "path": "/terms",
+      "keywords": [
+        "Terms",
+        "Paid time packs"
+      ]
+    }
+  ]
+}

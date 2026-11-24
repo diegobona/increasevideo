@@ -1,0 +1,7 @@
+*
+!worker.Dockerfile
+!scripts/
+!scripts/video-worker.mjs
+!src/
+!src/config/
+!src/config/pricing.ts

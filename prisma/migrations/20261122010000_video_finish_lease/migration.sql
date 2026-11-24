@@ -1,0 +1,2 @@
+ALTER TABLE "VideoJob" ADD COLUMN "pollToken" TEXT;
+ALTER TABLE "VideoJob" ADD COLUMN "pollLeaseUntil" DATETIME;

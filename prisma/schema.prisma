@@ -1,0 +1,179 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+// Workers requires statically imported WebAssembly rather than Node's runtime compilation.
+generator clientWorkerd {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma-workerd"
+  runtime  = "workerd"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+/// Google subject, rather than email or browser cookies, identifies a trial owner.
+model Account {
+  id            String        @id @default(uuid())
+  googleSubject String        @unique
+  email         String
+  name          String?
+  createdAt     DateTime      @default(now())
+  sessions      AuthSession[]
+}
+
+model AuthSession {
+  tokenHash String   @id
+  accountId String
+  expiresAt DateTime
+  account   Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@index([accountId])
+  @@index([expiresAt])
+}
+
+/// Short-lived, single-use authorization state. No Google access tokens are stored.
+model GoogleAuthFlow {
+  stateHash    String   @id
+  codeVerifier String
+  nonce        String
+  returnTo     String
+  expiresAt    DateTime
+
+  @@index([expiresAt])
+}
+
+/// Infrastructure counters shared by all server processes using this database.
+model RateLimitEvent {
+  id          String @id @default(cuid())
+  scope       String
+  ipHash      String
+  visitorId   String
+  createdAtMs BigInt
+  expiresAtMs BigInt
+
+  @@index([scope, ipHash, createdAtMs])
+  @@index([scope, visitorId, createdAtMs])
+  @@index([expiresAtMs])
+}
+
+enum VideoJobStatus {
+  PENDING
+  PROCESSING
+  SUCCEEDED
+  FAILED
+}
+
+enum OrderPlan {
+  SINGLE
+  TRIPLE
+  PACK20
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  REFUNDED
+}
+
+model VideoJob {
+  id                  String         @id @default(cuid())
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @updatedAt
+  status              VideoJobStatus @default(PENDING)
+  originalUrl         String
+  resultUrl           String?
+  resultExpiresAt     DateTime?
+  /// Must be populated from server-validated video metadata.
+  originalDurationSec Float
+  /// Server-selected processing length; free trials use only the start of the upload.
+  processedDurationSec Float?
+  originalWidth       Int
+  originalHeight      Int
+  originalFps         Float?
+  /// Zero denotes legacy per-job billing; one records split paid time debits.
+  billingVersion      Int            @default(0)
+  /// Actual output dimensions, read from the provider result on the server.
+  resultWidth         Int?
+  resultHeight        Int?
+  /// Server-calculated factor for the chosen resolution; legacy jobs retain 2 or 4.
+  scale               Float
+  denoise             Boolean        @default(false)
+  providerJobId       String?
+  /// Shared lease prevents concurrent polls from running postprocessing twice.
+  pollToken           String?
+  pollLeaseUntil      DateTime?
+  errorMessage        String?
+  isFreeTier          Boolean        @default(true)
+  watermark           Boolean        @default(true)
+  /// A per-job bearer token; future server code must supply a secure random token.
+  ownerToken          String         @unique
+  /// New records store Account.id here; legacy anonymous records retain their original ID.
+  visitorId           String
+  usageEvents         UsageEvent[]
+
+  @@index([visitorId, createdAt])
+  @@index([status, createdAt])
+  @@index([providerJobId])
+}
+
+model Order {
+  id                    String         @id @default(cuid())
+  createdAt             DateTime       @default(now())
+  stripeSessionId       String         @unique
+  /// Checkout may still be pending before Stripe assigns a payment intent.
+  stripePaymentIntentId String?
+  plan                  OrderPlan
+  amountCents           Int
+  currency              String
+  status                OrderStatus    @default(PENDING)
+  creditsGranted        Int
+  paidAt                DateTime?
+  expiresAt             DateTime?
+  refundedAmountCents   Int            @default(0)
+  /// Billing owner: Account.id for all purchases since Google sign-in was introduced.
+  visitorId             String
+  creditEntries         CreditLedger[]
+
+  @@index([visitorId, createdAt])
+  @@index([stripePaymentIntentId])
+}
+
+/// All grants and deductions are recorded as signed deltas; no mutable balance.
+model CreditLedger {
+  id        String   @id @default(cuid())
+  /// Billing owner: Account.id for new grants and debits, never a client-supplied visitor cookie.
+  visitorId String
+  orderId   String?
+  delta     Int
+  reason    String
+  createdAt DateTime @default(now())
+  order     Order?   @relation(fields: [orderId], references: [id], onDelete: Restrict)
+
+  @@index([visitorId, createdAt])
+  @@index([orderId])
+}
+
+model UsageEvent {
+  id        String    @id @default(cuid())
+  visitorId String
+  eventType String   @default("page_view")
+  sessionId String?
+  target    String?
+  durationMs Int?
+  path      String
+  referrer  String?
+  utmSource String?
+  /// Page views can be recorded before a video job exists.
+  jobId     String?
+  createdAt DateTime  @default(now())
+  job       VideoJob? @relation(fields: [jobId], references: [id], onDelete: SetNull)
+
+  @@index([visitorId, createdAt])
+  @@index([jobId])
+  @@index([eventType, createdAt])
+  @@index([sessionId])
+  @@index([utmSource, createdAt])
+}

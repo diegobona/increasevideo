@@ -1,0 +1,12 @@
+[PASS] /login: HTTP 200
+[PASS] /sitemap.xml: HTTP 200
+[PASS] /robots.txt: HTTP 200
+[PASS] /llms.txt: HTTP 200
+[PASS] /opengraph-image: HTTP 200
+[PASS] /result/deployment-missing-job: HTTP 404
+[PASS] /api/jobs/deployment-missing-job: HTTP 403
+[PASS] /result/deployment-missing-job/events: HTTP 403
+[PASS] /api/jobs: HTTP 401
+[PASS] /api/video/metadata: HTTP 401
+[PASS] /demos/coast-before.mp4: HTTP 200
+[PASS] Google sign-in entry: HTTP 303, correct callback, Secure/HttpOnly cookie (no login performed)

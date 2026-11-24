@@ -1,0 +1,17 @@
+# increasevideoquality.com
+
+Increase Video Quality is an online video enhancement tool for making blurry footage clearer, reducing noise, and upscaling video. Users can upload MP4, MOV, or WebM files, choose enhancement settings, compare the original with the processed result, and download the enhanced video. Google sign-in is required before uploading or processing. Each Google account receives a one-time free trial; guest trials are not available. One-time paid time packs are available; current prices and limits are listed on the pricing page. Example comparisons on the homepage are illustrative. Enhancement quality depends on the original footage.
+
+## Pages
+
+- [Home](https://increasevideoquality.com/): Upload a video, see illustrative comparisons, and read the video enhancement FAQ.
+- [Video Upscaler](https://increasevideoquality.com/video-upscaler): Supported uploads, output resolution choices, the account trial, and the limits of video upscaling.
+- [Fix Blurry Video](https://increasevideoquality.com/fix-blurry-video): Preview a soft phone clip before posting to TikTok, with checks for grain and motion.
+- [Restore Old Video](https://increasevideoquality.com/restore-old-video): Preserve the earliest digital source and judge restoration without losing its character.
+- [Upscale AI Clips for 4K Editing](https://increasevideoquality.com/upscale-ai-clips-for-4k-editing): Match generated footage to an editing timeline and check consistency across frames.
+- [Fix Compressed Video](https://increasevideoquality.com/fix-compressed-video): Find the best surviving export and compare compression artifacts before processing again.
+- [Pricing](https://increasevideoquality.com/pricing): Current time packs, included credits, and processing limits.
+- [About](https://increasevideoquality.com/about): Coldstone Technology Co., Ltd., why the tool is being built, its development stage, and trial and privacy limits.
+- [Contact](https://increasevideoquality.com/contact): Email contact for help, payment questions, and feedback.
+- [Privacy](https://increasevideoquality.com/privacy): How uploads, cookies, payment information, and third-party processing are handled.
+- [Terms](https://increasevideoquality.com/terms): Terms for video enhancement, paid credits, and payment enquiries.

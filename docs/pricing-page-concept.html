@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Pricing concept · Increase Video Quality</title>
+  <!-- Local design proposal. Reference: https://seedance3-pro.com/pricing
+       Snapshot of src/config/pricing.ts and paidCreditsForDuration. Prices in USD. -->
+  <style>
+    :root { color-scheme: light; --paper: #f7f7ef; --card: #fffffa; --ink: #202e24; --muted: #556453; --line: #c7cebe; --moss: #243d30; --lime: #d9ee94; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.5 "DM Sans", "Segoe UI", Arial, sans-serif; }
+    h1, h2, p, dl, dd { margin: 0; }
+    a { color: inherit; text-underline-offset: .2em; }
+    a:focus-visible, summary:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
+    .wrap { width: min(1100px, calc(100% - 3rem)); margin: auto; }
+    header { border-bottom: 1px solid var(--line); }
+    nav { min-height: 4.3rem; display: flex; align-items: center; gap: 1.65rem; font-size: .88rem; }
+    nav a { text-decoration: none; }
+    nav a[aria-current] { border-bottom: 1px solid currentColor; }
+    .wordmark { margin-right: auto; display: inline-flex; align-items: center; gap: .48rem; font: bold 1.85rem/1 Georgia, serif; letter-spacing: -.075em; }
+    .wordmark img { width: 31px; height: 31px; }
+    .preview { border: 1px solid var(--ink); border-radius: 99px; padding: .5rem 1rem; font-weight: 600; }
+    .intro { text-align: center; padding: clamp(2rem,5vw,4.2rem) 0 2rem; }
+    h1, .section-title { font-family: "Instrument Serif", Georgia, serif; font-weight: 400; line-height: 1.04; letter-spacing: -.045em; }
+    h1 { font-size: clamp(2.6rem,5vw,4.3rem); }
+    .intro p { color: var(--muted); margin-top: .7rem; }
+    .plans { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+    .card { border: 1px solid var(--line); border-radius: 1.05rem; padding: clamp(1.35rem,2.4vw,2rem); background: var(--card); }
+    .card-heading { min-height: 2rem; display: flex; align-items: center; justify-content: space-between; gap: .5rem; }
+    .card h2 { font-size: 1.3rem; line-height: 1.2; font-weight: 650; letter-spacing: -.025em; }
+    .badge { background: var(--lime); border-radius: 99px; color: var(--moss); padding: .22rem .64rem; font-size: .74rem; font-weight: 700; }
+    .price { font-weight: 650; font-size: clamp(2.8rem,4.5vw,3.8rem); line-height: 1; letter-spacing: -.068em; margin-top: 1.25rem; }
+    .price span { font-size: .58em; vertical-align: .4em; margin-right: .08em; }
+    .amount { font-weight: 650; margin-top: .48rem; }
+    .example { color: var(--muted); margin: 1.15rem 0 .85rem; font-size: .95rem; }
+    .card button { display: flex; align-items: center; justify-content: space-between; width: 100%; border: 1px solid var(--ink); border-radius: .55rem; padding: .68rem .95rem; font-family: inherit; font-weight: 650; font-size: .96rem; line-height: 1.4; background: transparent; color: var(--ink); opacity: 1; }
+    .capacity { margin-top: 1.2rem; border-top: 1px solid var(--line); padding-top: 1rem; }
+    .capacity p { font-size: .76rem; color: var(--muted); margin-bottom: .34rem; }
+    .capacity dl > div { display: flex; justify-content: space-between; line-height: 1.85; font-size: .88rem; }
+    .capacity dd, td { font-variant-numeric: tabular-nums; }
+    .capacity dd { font-weight: 650; }
+    .best { background: var(--moss); color: #f7f9eb; border-color: var(--moss); }
+    .best .price { color: var(--lime); }
+    .best .example, .best .capacity p { color: #d5dfca; }
+    .best .capacity { border-color: #597060; }
+    .best button { background: var(--lime); border-color: var(--lime); color: var(--moss); }
+    .rates, .faq { margin-top: 3.3rem; display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1.4fr); align-items: start; column-gap: 2rem; }
+    .section-title { font-size: clamp(2rem,3vw,2.65rem); }
+    .section-note { color: var(--muted); font-size: .91rem; margin: .6rem 0 0; max-width: 27em; }
+    .table-wrap { border: 1px solid var(--line); border-radius: .7rem; overflow: hidden; background: var(--card); }
+    table { width: 100%; border-collapse: collapse; font-size: .89rem; text-align: right; }
+    th, td { padding: .62rem .95rem; }
+    thead { background: #e9eddf; color: var(--muted); }
+    thead th { font-size: .81rem; }
+    th:first-child { text-align: left; }
+    tbody tr { border-top: 1px solid var(--line); }
+    .faq { margin-bottom: 4rem; }
+    details { border-top: 1px solid var(--line); }
+    details:last-child { border-bottom: 1px solid var(--line); }
+    summary { display: flex; justify-content: space-between; align-items: center; cursor: pointer; padding: .74rem 0; font-weight: 600; }
+    summary::-webkit-details-marker { display: none; }
+    summary::after { content: "+"; }
+    details[open] summary::after { content: "−"; }
+    details p { margin: 0 0 .9rem; color: var(--muted); }
+    @media (max-width: 720px) { .wrap { width: calc(100% - 2rem); } nav { gap: 1rem; } nav .optional { display: none; } .plans, .rates, .faq { grid-template-columns: 1fr; } .rates, .faq { gap: 1rem; margin-top: 2.2rem; } .card { padding: 1.35rem; } }
+  </style>
+</head>
+<body>
+  <header><nav class="wrap" aria-label="Main navigation"><a class="wordmark" href="https://increasevideoquality.com/"><img src="../public/brand/logo-mark.svg" alt="">increase.</a><a class="optional" href="https://increasevideoquality.com/video-upscaler">Video upscaler</a><a href="#packs" aria-current="page">Pricing</a><a class="preview" href="https://increasevideoquality.com/#upload">Try a free clip ↗</a></nav></header>
+  <main class="wrap">
+    <div class="intro"><h1>Video upscaling packs</h1><p>Upscale with Topaz AI. Pay once. Export without a watermark.</p></div>
+    <section class="plans" aria-label="One-time credit packs in US dollars" id="packs">
+        <article class="card">
+          <div class="card-heading"><h2>Starter</h2></div>
+          <p class="price"><span>$</span>4.99</p>
+          <p class="amount">6 credits</p>
+          <p class="example">Upscale a full minute to 1080p.</p>
+          <button aria-label="Get Starter pack" title="Design preview" disabled>Get Starter <span aria-hidden="true">↗</span></button>
+          <div class="capacity">
+            <p>Max. footage per pack</p>
+            <dl><div><dt>1080p</dt><dd>1 min</dd></div><div><dt>2K</dt><dd>48 sec</dd></div><div><dt>4K</dt><dd>24 sec</dd></div></dl>
+          </div>
+        </article>
+        <article class="card">
+          <div class="card-heading"><h2>Creator</h2></div>
+          <p class="price"><span>$</span>7.99</p>
+          <p class="amount">18 credits</p>
+          <p class="example">Upscale a full minute to 4K.</p>
+          <button aria-label="Get Creator pack" title="Design preview" disabled>Get Creator <span aria-hidden="true">↗</span></button>
+          <div class="capacity">
+            <p>Max. footage per pack</p>
+            <dl><div><dt>1080p</dt><dd>3 min</dd></div><div><dt>2K</dt><dd>2 min 24 sec</dd></div><div><dt>4K</dt><dd>1 min 12 sec</dd></div></dl>
+          </div>
+        </article>
+        <article class="card best">
+          <div class="card-heading"><h2>Value</h2><span class="badge">Best value</span></div>
+          <p class="price"><span>$</span>19.99</p>
+          <p class="amount">60 credits</p>
+          <p class="example">Four 60-second clips in 4K.</p>
+          <button aria-label="Get Value pack" title="Design preview" disabled>Get Value <span aria-hidden="true">↗</span></button>
+          <div class="capacity">
+            <p>Max. footage per pack</p>
+            <dl><div><dt>1080p</dt><dd>10 min</dd></div><div><dt>2K</dt><dd>8 min</dd></div><div><dt>4K</dt><dd>4 min</dd></div></dl>
+          </div>
+        </article>
+    </section>
+    <section class="rates"><div><h2 class="section-title">Credits per clip</h2><p class="section-note">With Value, a 60-second 4K clip costs about $5.00.</p></div>
+      <div class="table-wrap"><table aria-label="Credits used for a single clip"><thead><tr><th>Output</th><th>15 sec</th><th>30 sec</th><th>60 sec</th></tr></thead>
+        <tbody><tr><th scope="row">1080p</th><td>2</td><td>3</td><td>6</td></tr><tr><th scope="row">2K</th><td>2</td><td>4</td><td>8</td></tr><tr><th scope="row">4K</th><td>4</td><td>8</td><td>15</td></tr></tbody>
+      </table></div>
+    </section>
+    <section class="faq"><h2 class="section-title">FAQ</h2><div>
+      <details><summary>How long can each video be?</summary><p>Up to 5 minutes at 30 fps or less. Each upload must be under 500 MB.</p></details>
+      <details><summary>When do my credits expire?</summary><p>Paid credits are valid for 12 months from purchase.</p></details>
+      <details><summary>What if my video fails to process?</summary><p>Credits used for a failed job are returned automatically.</p></details>
+    </div></section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,959 @@
+TAP version 13
+# Subtest: 4 seconds is within the free duration limit
+ok 1 - 4 seconds is within the free duration limit
+  ---
+  duration_ms: 1.1571
+  type: 'test'
+  ...
+# Subtest: 6 seconds returns FREE_LIMIT_DURATION with readable copy
+ok 2 - 6 seconds returns FREE_LIMIT_DURATION with readable copy
+  ---
+  duration_ms: 0.8176
+  type: 'test'
+  ...
+# Subtest: 720p is within the free resolution limit
+ok 3 - 720p is within the free resolution limit
+  ---
+  duration_ms: 0.1489
+  type: 'test'
+  ...
+# Subtest: 1080p is accepted and larger dimensions return FREE_LIMIT_RESOLUTION
+ok 4 - 1080p is accepted and larger dimensions return FREE_LIMIT_RESOLUTION
+  ---
+  duration_ms: 0.108
+  type: 'test'
+  ...
+# Subtest: an extremely wide output cannot bypass the free resolution ceiling
+ok 5 - an extremely wide output cannot bypass the free resolution ceiling
+  ---
+  duration_ms: 0.2147
+  type: 'test'
+  ...
+# Subtest: exactly 5 seconds and 720p are accepted
+ok 6 - exactly 5 seconds and 720p are accepted
+  ---
+  duration_ms: 0.1471
+  type: 'test'
+  ...
+# Subtest: free videos cannot disable the watermark
+ok 7 - free videos cannot disable the watermark
+  ---
+  duration_ms: 0.1477
+  type: 'test'
+  ...
+# Subtest: invalid metadata cannot pass a free-tier check
+ok 8 - invalid metadata cannot pass a free-tier check
+  ---
+  duration_ms: 0.1787
+  type: 'test'
+  ...
+# Subtest: SSR check accepts a question rendered in server HTML
+ok 9 - SSR check accepts a question rendered in server HTML
+  ---
+  duration_ms: 1.307
+  type: 'test'
+  ...
+# Subtest: equivalent root canonicals pass with or without a trailing slash
+ok 10 - equivalent root canonicals pass with or without a trailing slash
+  ---
+  duration_ms: 0.239
+  type: 'test'
+  ...
+# Subtest: a question present only in JSON-LD or hydration scripts does not pass
+ok 11 - a question present only in JSON-LD or hydration scripts does not pass
+  ---
+  duration_ms: 0.718
+  type: 'test'
+  ...
+# Subtest: NoScript placeholders fail even when keywords are present
+ok 12 - NoScript placeholders fail even when keywords are present
+  ---
+  duration_ms: 0.1229
+  type: 'test'
+  ...
+# Subtest: missing metadata fails the check
+ok 13 - missing metadata fails the check
+  ---
+  duration_ms: 0.2028
+  type: 'test'
+  ...
+# (node:44240) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: migrations create four business tables and persistent rate limit infrastructure
+ok 14 - migrations create four business tables and persistent rate limit infrastructure
+  ---
+  duration_ms: 19.0566
+  type: 'test'
+  ...
+# Subtest: video jobs accept both supported scales and start pending
+ok 15 - video jobs accept both supported scales and start pending
+  ---
+  duration_ms: 13.0518
+  type: 'test'
+  ...
+# Subtest: SQLite rejects unsupported scales and job statuses
+ok 16 - SQLite rejects unsupported scales and job statuses
+  ---
+  duration_ms: 12.1306
+  type: 'test'
+  ...
+# Subtest: target resolution migration preserves existing jobs, leases and attribution links
+ok 17 - target resolution migration preserves existing jobs, leases and attribution links
+  ---
+  duration_ms: 12.79
+  type: 'test'
+  ...
+# Subtest: anonymous result tokens identify exactly one job
+ok 18 - anonymous result tokens identify exactly one job
+  ---
+  duration_ms: 12.5512
+  type: 'test'
+  ...
+# Subtest: pending orders may lack a payment intent and enforce session uniqueness
+ok 19 - pending orders may lack a payment intent and enforce session uniqueness
+  ---
+  duration_ms: 12.7031
+  type: 'test'
+  ...
+# Subtest: SQLite rejects unsupported plans and order statuses
+ok 20 - SQLite rejects unsupported plans and order statuses
+  ---
+  duration_ms: 11.1099
+  type: 'test'
+  ...
+# Subtest: free grants, paid grants, and deductions sum through the credit ledger
+ok 21 - free grants, paid grants, and deductions sum through the credit ledger
+  ---
+  duration_ms: 11.8888
+  type: 'test'
+  ...
+# Subtest: attribution permits visits before jobs and survives job deletion
+ok 22 - attribution permits visits before jobs and survives job deletion
+  ---
+  duration_ms: 10.238
+  type: 'test'
+  ...
+# Subtest: only authenticated worker output with a watermark confirmation is saved to R2
+ok 23 - only authenticated worker output with a watermark confirmation is saved to R2
+  ---
+  duration_ms: 16.1314
+  type: 'test'
+  ...
+# Subtest: failed, unmarked and non-video worker responses are not stored
+ok 24 - failed, unmarked and non-video worker responses are not stored
+  ---
+  duration_ms: 1.8801
+  type: 'test'
+  ...
+# Subtest: unavailable watermark worker is detected before an enhancement can start
+ok 25 - unavailable watermark worker is detected before an enhancement can start
+  ---
+  duration_ms: 0.8811
+  type: 'test'
+  ...
+# Subtest: Google callback issues a secure hashed session and exactly one persistent trial grant
+ok 26 - Google callback issues a secure hashed session and exactly one persistent trial grant
+  ---
+  duration_ms: 148.2964
+  type: 'test'
+  ...
+# Subtest: wrong, missing, expired and replayed OAuth state cannot log in
+ok 27 - wrong, missing, expired and replayed OAuth state cannot log in
+  ---
+  duration_ms: 23.7152
+  type: 'test'
+  ...
+# Subtest: Google ID token signature, issuer, audience, expiry, nonce and verified email are checked
+ok 28 - Google ID token signature, issuer, audience, expiry, nonce and verified email are checked
+  ---
+  duration_ms: 89.1137
+  type: 'test'
+  ...
+# Subtest: guest cookies or a forged account ID cannot upload, inspect video, submit or buy
+ok 29 - guest cookies or a forged account ID cannot upload, inspect video, submit or buy
+  ---
+  duration_ms: 11.7749
+  type: 'test'
+  ...
+# Subtest: a five-second trial succeeds once; relogin and changed visitor cookies cannot replenish it
+ok 30 - a five-second trial succeeds once; relogin and changed visitor cookies cannot replenish it
+  ---
+  duration_ms: 19.7598
+  type: 'test'
+  ...
+# Subtest: server rejects a free upload over sixty seconds despite forged client metadata
+ok 31 - server rejects a free upload over sixty seconds despite forged client metadata
+  ---
+  duration_ms: 6.9138
+  type: 'test'
+  ...
+# Subtest: parallel logins for one subject grant once; another Google account has its own allowance
+ok 32 - parallel logins for one subject grant once; another Google account has its own allowance
+  ---
+  duration_ms: 10.8332
+  type: 'test'
+  ...
+# Subtest: guest balance is zero and legacy visitor IDs cannot receive new free grants
+ok 33 - guest balance is zero and legacy visitor IDs cannot receive new free grants
+  ---
+  duration_ms: 2.205
+  type: 'test'
+  ...
+# Subtest: signout revokes the server session, rejects cross-site requests and does not reset the grant
+ok 34 - signout revokes the server session, rejects cross-site requests and does not reset the grant
+  ---
+  duration_ms: 11.9425
+  type: 'test'
+  ...
+# Subtest: return destinations are restricted to local application pages
+ok 35 - return destinations are restricted to local application pages
+  ---
+  duration_ms: 1.4402
+  type: 'test'
+  ...
+# Subtest: tests\\google-auth.test.ts
+not ok 5 - tests\\google-auth.test.ts
+  ---
+  duration_ms: 920.0069
+  type: 'test'
+  location: 'D:\\Asideproject\\！Overseas网站项目\\IncreaseVideoQuality\\tests\\google-auth.test.ts:1:1'
+  failureType: 'testCodeFailure'
+  exitCode: 3221225477
+  signal: ~
+  error: 'test failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: client polls every configured interval and stops once a result arrives
+ok 37 - client polls every configured interval and stops once a result arrives
+  ---
+  duration_ms: 14.7662
+  type: 'test'
+  ...
+# Subtest: polling stops at the deadline; retry checks the same job without a new POST
+ok 38 - polling stops at the deadline; retry checks the same job without a new POST
+  ---
+  duration_ms: 6.7038
+  type: 'test'
+  ...
+# Subtest: concurrent polls finalize a free video only once
+ok 39 - concurrent polls finalize a free video only once
+  ---
+  duration_ms: 281.5151
+  type: 'test'
+  ...
+# Subtest: finished video checkpoints survive metadata retries without repeating watermark processing
+ok 40 - finished video checkpoints survive metadata retries without repeating watermark processing
+  ---
+  duration_ms: 15.0417
+  type: 'test'
+  ...
+# Subtest: submit → poll → success persists resultUrl with real SQLite and a mock provider
+ok 41 - submit → poll → success persists resultUrl with real SQLite and a mock provider
+  ---
+  duration_ms: 19.7438
+  type: 'test'
+  ...
+# Subtest: another owner's cookie is rejected with 403 before contacting the provider
+ok 42 - another owner's cookie is rejected with 403 before contacting the provider
+  ---
+  duration_ms: 17.8491
+  type: 'test'
+  ...
+# Subtest: existing ledger credits are used without granting a second free allowance
+ok 43 - existing ledger credits are used without granting a second free allowance
+  ---
+  duration_ms: 12.7722
+  type: 'test'
+  ...
+# Subtest: a visitor gets one ledger grant: their second free submission returns 402
+ok 44 - a visitor gets one ledger grant: their second free submission returns 402
+  ---
+  duration_ms: 11.9815
+  type: 'test'
+  ...
+# Subtest: concurrent requests cannot spend the same free credit twice
+ok 45 - concurrent requests cannot spend the same free credit twice
+  ---
+  duration_ms: 12.9638
+  type: 'test'
+  ...
+# Subtest: server re-probes the video and rejects free duration violations without a debit
+ok 46 - server re-probes the video and rejects free duration violations without a debit
+  ---
+  duration_ms: 6.2448
+  type: 'test'
+  ...
+# Subtest: a 60-second free upload enhances only its verified first five seconds
+ok 47 - a 60-second free upload enhances only its verified first five seconds
+  ---
+  duration_ms: 15.5888
+  type: 'test'
+  ...
+# Subtest: a nine-second upload uses the trim adapter and submits only the verified five-second clip
+ok 48 - a nine-second upload uses the trim adapter and submits only the verified five-second clip
+  ---
+  duration_ms: 11.5848
+  type: 'test'
+  ...
+# Subtest: clips of five seconds or less are enhanced in full without a minimum upload duration
+ok 49 - clips of five seconds or less are enhanced in full without a minimum upload duration
+  ---
+  duration_ms: 21.5252
+  type: 'test'
+  ...
+# Subtest: free jobs cap the provider output at 1080p before inference using verified clip dimensions
+ok 50 - free jobs cap the provider output at 1080p before inference using verified clip dimensions
+  ---
+  duration_ms: 26.1187
+  type: 'test'
+  ...
+# Subtest: free target-resolution requests ignore forged scale and reject paid-only targets before charging
+ok 51 - free target-resolution requests ignore forged scale and reject paid-only targets before charging
+  ---
+  duration_ms: 12.0275
+  type: 'test'
+  ...
+# video_job_submission_failed {
+#   jobId: 'cmwry3cx00017d0t8blig109r',
+#   stage: 'trim',
+#   code: 'VIDEO_TRIM_FAILED',
+#   original: { durationSec: 15, width: 640, height: 360 },
+#   processedDurationSec: 5
+# }
+# video_job_submission_failed {
+#   jobId: 'cmwry3cxa0019d0t87fsx3yff',
+#   stage: 'validation',
+#   code: 'TRIAL_CLIP_DURATION',
+#   original: { durationSec: 15, width: 640, height: 360 },
+#   clip: { durationSec: 15, width: 640, height: 360 },
+#   processedDurationSec: 5
+# }
+# Subtest: a failed or oversized trim never reaches enhancement and restores the trial
+ok 52 - a failed or oversized trim never reaches enhancement and restores the trial
+  ---
+  duration_ms: 19.6893
+  type: 'test'
+  ...
+# Subtest: trim failures identify the failed stage without exposing private URLs
+ok 53 - trim failures identify the failed stage without exposing private URLs
+  ---
+  duration_ms: 9.3176
+  type: 'test'
+  ...
+# Subtest: oversized trial clips report measured duration and never reach enhancement
+ok 54 - oversized trial clips report measured duration and never reach enhancement
+  ---
+  duration_ms: 8.2973
+  type: 'test'
+  ...
+# Subtest: submission preserves safe provider errors and refunds the trial
+ok 55 - submission preserves safe provider errors and refunds the trial
+  ---
+  duration_ms: 8.4451
+  type: 'test'
+  ...
+# video_job_submission_failed {
+#   jobId: 'cmwry3cye001hd0t8f2ir7z0n',
+#   stage: 'submit',
+#   code: 'PROVIDER_SUBMIT_FAILED',
+#   original: { durationSec: 4, width: 640, height: 360 },
+#   processedDurationSec: 4
+# }
+# Subtest: provider submission failures fail the job and refund through the ledger
+ok 56 - provider submission failures fail the job and refund through the ledger
+  ---
+  duration_ms: 12.8175
+  type: 'test'
+  ...
+# Subtest: a failed processing job refunds exactly once across repeated polls
+ok 57 - a failed processing job refunds exactly once across repeated polls
+  ---
+  duration_ms: 12.7359
+  type: 'test'
+  ...
+# Subtest: free results above the output limit are rejected and refunded
+ok 58 - free results above the output limit are rejected and refunded
+  ---
+  duration_ms: 13.6318
+  type: 'test'
+  ...
+# Subtest: 20 submissions with one visitor are blocked from the fourth request
+ok 59 - 20 submissions with one visitor are blocked from the fourth request
+  ---
+  duration_ms: 39.3974
+  type: 'test'
+  ...
+# Subtest: new cookies cannot bypass the IP hourly limit
+ok 60 - new cookies cannot bypass the IP hourly limit
+  ---
+  duration_ms: 50.9785
+  type: 'test'
+  ...
+# Subtest: a forged body visitorId cannot reset a cookie owner's ledger
+ok 61 - a forged body visitorId cannot reset a cookie owner's ledger
+  ---
+  duration_ms: 11.3035
+  type: 'test'
+  ...
+# Subtest: recreating handlers does not reset persisted request limits
+ok 62 - recreating handlers does not reset persisted request limits
+  ---
+  duration_ms: 11.6094
+  type: 'test'
+  ...
+# Subtest: Checkout → signed webhook → paid enhancement → result persists without using free credits
+ok 63 - Checkout → signed webhook → paid enhancement → result persists without using free credits
+  ---
+  duration_ms: 201.7535
+  type: 'test'
+  ...
+# Subtest: paid resolution choice charges and persists a server-calculated fractional upscale
+ok 64 - paid resolution choice charges and persists a server-calculated fractional upscale
+  ---
+  duration_ms: 183.4525
+  type: 'test'
+  ...
+# Subtest: paid submission accepts longer footage, removes watermark, and persists the output
+ok 65 - paid submission accepts longer footage, removes watermark, and persists the output
+  ---
+  duration_ms: 18.7202
+  type: 'test'
+  ...
+# Subtest: paid intent or body visitorId never grants paid access without settled credit
+ok 66 - paid intent or body visitorId never grants paid access without settled credit
+  ---
+  duration_ms: 7.4597
+  type: 'test'
+  ...
+# Subtest: 4K is charged from actual scaled output even if the client claims 1080p
+ok 67 - 4K is charged from actual scaled output even if the client claims 1080p
+  ---
+  duration_ms: 13.5583
+  type: 'test'
+  ...
+# Subtest: paid balances exclude pending, expired, and legacy orders without expiry
+ok 68 - paid balances exclude pending, expired, and legacy orders without expiry
+  ---
+  duration_ms: 9.88
+  type: 'test'
+  ...
+# Subtest: paid spends cannot consume a free credit and free spends cannot consume paid time
+ok 69 - paid spends cannot consume a free credit and free spends cannot consume paid time
+  ---
+  duration_ms: 15.4853
+  type: 'test'
+  ...
+# Subtest: a job can spend multiple orders FIFO and failed processing refunds those same pools exactly once
+ok 70 - a job can spend multiple orders FIFO and failed processing refunds those same pools exactly once
+  ---
+  duration_ms: 22.4484
+  type: 'test'
+  ...
+# Subtest: concurrent paid jobs cannot spend the same three credits twice
+ok 71 - concurrent paid jobs cannot spend the same three credits twice
+  ---
+  duration_ms: 14.158
+  type: 'test'
+  ...
+# Subtest: refund debt on a refunded or expired order offsets new paid purchases
+ok 72 - refund debt on a refunded or expired order offsets new paid purchases
+  ---
+  duration_ms: 10.7509
+  type: 'test'
+  ...
+# video_job_submission_failed {
+#   jobId: 'cmwry3f76000mi4t82oh6jsu8',
+#   stage: 'submit',
+#   code: 'PROVIDER_SUBMIT_FAILED',
+#   original: { durationSec: 30, width: 960, height: 540 },
+#   processedDurationSec: 30
+# }
+# Subtest: a failed submission refunds paid time but does not issue a free allowance
+ok 73 - a failed submission refunds paid time but does not issue a free allowance
+  ---
+  duration_ms: 16.2076
+  type: 'test'
+  ...
+# Subtest: fal frame counts expose an understated frame rate instead of trusting client fps
+ok 74 - fal frame counts expose an understated frame rate instead of trusting client fps
+  ---
+  duration_ms: 0.9584
+  type: 'test'
+  ...
+# Subtest: a paid result larger than its server quote is failed and refunded
+ok 75 - a paid result larger than its server quote is failed and refunded
+  ---
+  duration_ms: 15.3134
+  type: 'test'
+  ...
+# Subtest: missing or high server fps prevents paid submissions before any debit
+ok 76 - missing or high server fps prevents paid submissions before any debit
+  ---
+  duration_ms: 14.4915
+  type: 'test'
+  ...
+# Subtest: processing failure after a grant expires records a refund without restoring spendable time
+ok 77 - processing failure after a grant expires records a refund without restoring spendable time
+  ---
+  duration_ms: 13.3367
+  type: 'test'
+  ...
+# Subtest: settled refund debt is not charged again when the paying order expires
+ok 78 - settled refund debt is not charged again when the paying order expires
+  ---
+  duration_ms: 14.5827
+  type: 'test'
+  ...
+# Subtest: Checkout uses only configured prices and cookie identity, and never grants credits before payment
+ok 79 - Checkout uses only configured prices and cookie identity, and never grants credits before payment
+  ---
+  duration_ms: 156.2019
+  type: 'test'
+  ...
+# Subtest: missing Stripe keys return an explicit 503 without creating an order
+ok 80 - missing Stripe keys return an explicit 503 without creating an order
+  ---
+  duration_ms: 7.1347
+  type: 'test'
+  ...
+# Subtest: Checkout refuses real charging when webhook configuration is missing
+ok 81 - Checkout refuses real charging when webhook configuration is missing
+  ---
+  duration_ms: 11.0292
+  type: 'test'
+  ...
+# Subtest: signed paid webhook grants once across duplicate and concurrent events
+ok 82 - signed paid webhook grants once across duplicate and concurrent events
+  ---
+  duration_ms: 21.3466
+  type: 'test'
+  ...
+# Subtest: forged signatures, prices, currencies, order IDs and session IDs cannot grant credits
+ok 83 - forged signatures, prices, currencies, order IDs and session IDs cannot grant credits
+  ---
+  duration_ms: 13.8098
+  type: 'test'
+  ...
+# Subtest: partial and full refunds revoke only the new cumulative amount; paid replay never restores refunded credits
+ok 84 - partial and full refunds revoke only the new cumulative amount; paid replay never restores refunded credits
+  ---
+  duration_ms: 33.1657
+  type: 'test'
+  ...
+# Subtest: refund delivered before paid cannot be lost or followed by a full grant
+ok 85 - refund delivered before paid cannot be lost or followed by a full grant
+  ---
+  duration_ms: 21.8786
+  type: 'test'
+  ...
+# Subtest: unknown refunds are retryable and unknown event types are harmless
+ok 86 - unknown refunds are retryable and unknown event types are harmless
+  ---
+  duration_ms: 3.2784
+  type: 'test'
+  ...
+# Subtest: a refund with a mismatched payment intent, amount or currency never revokes credits
+ok 87 - a refund with a mismatched payment intent, amount or currency never revokes credits
+  ---
+  duration_ms: 12.6361
+  type: 'test'
+  ...
+# Subtest: signed webhook body size is bounded before parsing and no visitor cookie is issued
+ok 88 - signed webhook body size is bounded before parsing and no visitor cookie is issued
+  ---
+  duration_ms: 2.2967
+  type: 'test'
+  ...
+# Subtest: checkout has persistent visitor and IP throttles with Retry-After
+ok 89 - checkout has persistent visitor and IP throttles with Retry-After
+  ---
+  duration_ms: 24.4476
+  type: 'test'
+  ...
+# Subtest: pricing defines the advertised free allowance and paid credit packs
+ok 90 - pricing defines the advertised free allowance and paid credit packs
+  ---
+  duration_ms: 0.8089
+  type: 'test'
+  ...
+# Subtest: paid packs grant the agreed standard seconds with bounded output and expiry
+ok 91 - paid packs grant the agreed standard seconds with bounded output and expiry
+  ---
+  duration_ms: 0.0947
+  type: 'test'
+  ...
+# Subtest: existing upload and validation callers share the canonical plan settings
+ok 92 - existing upload and validation callers share the canonical plan settings
+  ---
+  duration_ms: 0.0787
+  type: 'test'
+  ...
+# Subtest: abuse limits apply to both visitor identity and IP
+ok 93 - abuse limits apply to both visitor identity and IP
+  ---
+  duration_ms: 0.236
+  type: 'test'
+  ...
+# Subtest: free Topaz jobs finish through the watermark worker without a custom fal model
+ok 94 - free Topaz jobs finish through the watermark worker without a custom fal model
+  ---
+  duration_ms: 15.28
+  type: 'test'
+  ...
+# Subtest: watermark worker failures never expose the unmarked Topaz result
+ok 95 - watermark worker failures never expose the unmarked Topaz result
+  ---
+  duration_ms: 0.9158
+  type: 'test'
+  ...
+# Subtest: Topaz accepts a fractional server-capped scale without enabling frame interpolation
+ok 96 - Topaz accepts a fractional server-capped scale without enabling frame interpolation
+  ---
+  duration_ms: 1.1559
+  type: 'test'
+  ...
+# Subtest: FalProvider submits the requested upscale/denoise/watermark and resolves queue results
+ok 97 - FalProvider submits the requested upscale/denoise/watermark and resolves queue results
+  ---
+  duration_ms: 1.7719
+  type: 'test'
+  ...
+# Subtest: plain Topaz requests use documented inputs and owner/app queue URLs
+ok 98 - plain Topaz requests use documented inputs and owner/app queue URLs
+  ---
+  duration_ms: 0.8805
+  type: 'test'
+  ...
+# Subtest: free jobs require a configured watermark pipeline and never silently return unwatermarked output
+ok 99 - free jobs require a configured watermark pipeline and never silently return unwatermarked output
+  ---
+  duration_ms: 0.9418
+  type: 'test'
+  ...
+# Subtest: paid quotes charge standard output time, rounded to whole credits
+ok 100 - paid quotes charge standard output time, rounded to whole credits
+  ---
+  duration_ms: 0.9874
+  type: 'test'
+  ...
+# Subtest: portrait video uses long and short edges for standard and 4K limits
+ok 101 - portrait video uses long and short edges for standard and 4K limits
+  ---
+  duration_ms: 0.1542
+  type: 'test'
+  ...
+# Subtest: paid quotes reject unknown or expensive frame rates and oversized output
+ok 102 - paid quotes reject unknown or expensive frame rates and oversized output
+  ---
+  duration_ms: 0.109
+  type: 'test'
+  ...
+# Subtest: hourly sliding windows reopen at expiry and Retry-After counts down
+ok 103 - hourly sliding windows reopen at expiry and Retry-After counts down
+  ---
+  duration_ms: 139.1648
+  type: 'test'
+  ...
+# Subtest: concurrent checks atomically admit only three requests for one visitor
+ok 104 - concurrent checks atomically admit only three requests for one visitor
+  ---
+  duration_ms: 13.2733
+  type: 'test'
+  ...
+# Subtest: metadata permits six visitor requests and uses server metadata
+ok 105 - metadata permits six visitor requests and uses server metadata
+  ---
+  duration_ms: 41.685
+  type: 'test'
+  ...
+# Subtest: metadata also has a shared IP ceiling across visitor cookies
+ok 106 - metadata also has a shared IP ceiling across visitor cookies
+  ---
+  duration_ms: 28.9182
+  type: 'test'
+  ...
+# Subtest: target resolutions calculate the actual factor from server dimensions
+ok 107 - target resolutions calculate the actual factor from server dimensions
+  ---
+  duration_ms: 0.9451
+  type: 'test'
+  ...
+# Subtest: target resolutions preserve portrait and non-widescreen proportions
+ok 108 - target resolutions preserve portrait and non-widescreen proportions
+  ---
+  duration_ms: 0.1111
+  type: 'test'
+  ...
+# Subtest: unsupported targets are rejected instead of promising a different output
+ok 109 - unsupported targets are rejected instead of promising a different output
+  ---
+  duration_ms: 0.1046
+  type: 'test'
+  ...
+# Subtest: target quotes use predicted dimensions and keep the existing paid rates
+ok 110 - target quotes use predicted dimensions and keep the existing paid rates
+  ---
+  duration_ms: 0.3554
+  type: 'test'
+  ...
+# Subtest: owned results use actual output dimensions rather than multiplying by the selected scale
+ok 111 - owned results use actual output dimensions rather than multiplying by the selected scale
+  ---
+  duration_ms: 120.5341
+  type: 'test'
+  ...
+# Subtest: a clipped trial describes the processed five seconds rather than the whole upload
+ok 112 - a clipped trial describes the processed five seconds rather than the whole upload
+  ---
+  duration_ms: 1.7204
+  type: 'test'
+  ...
+# Subtest: a capped result does not claim its resolution increased
+ok 113 - a capped result does not claim its resolution increased
+  ---
+  duration_ms: 2.1569
+  type: 'test'
+  ...
+# Subtest: missing jobs and incorrect owner tokens cannot read result details
+ok 114 - missing jobs and incorrect owner tokens cannot read result details
+  ---
+  duration_ms: 6.4259
+  type: 'test'
+  ...
+# Subtest: legacy completed jobs probe and persist output dimensions on the server
+ok 115 - legacy completed jobs probe and persist output dimensions on the server
+  ---
+  duration_ms: 8.7196
+  type: 'test'
+  ...
+# Subtest: owned downloads stream a video attachment; another cookie cannot fetch the file
+ok 116 - owned downloads stream a video attachment; another cookie cannot fetch the file
+  ---
+  duration_ms: 15.4138
+  type: 'test'
+  ...
+# Subtest: private R2 result downloads renew expired links after checking ownership
+ok 117 - private R2 result downloads renew expired links after checking ownership
+  ---
+  duration_ms: 4.5392
+  type: 'test'
+  ...
+# Subtest: Stripe signatures require the unmodified body and a recent timestamp
+ok 118 - Stripe signatures require the unmodified body and a recent timestamp
+  ---
+  duration_ms: 2.0873
+  type: 'test'
+  ...
+# Subtest: missing Stripe configuration fails clearly without a network request
+ok 119 - missing Stripe configuration fails clearly without a network request
+  ---
+  duration_ms: 0.2401
+  type: 'test'
+  ...
+# Subtest: Checkout sends server prices in USD with order-bound idempotency and trusted return URLs
+ok 120 - Checkout sends server prices in USD with order-bound idempotency and trusted return URLs
+  ---
+  duration_ms: 12.9702
+  type: 'test'
+  ...
+# Subtest: free upload accepts up to sixty seconds but its output remains capped at five
+ok 121 - free upload accepts up to sixty seconds but its output remains capped at five
+  ---
+  duration_ms: 0.7526
+  type: 'test'
+  ...
+# Subtest: trial clipping uses the authenticated local worker and stores its output without calling fal
+ok 122 - trial clipping uses the authenticated local worker and stores its output without calling fal
+  ---
+  duration_ms: 18.8643
+  type: 'test'
+  ...
+# Subtest: failed or unconfirmed worker clips cannot be stored or submitted
+ok 123 - failed or unconfirmed worker clips cannot be stored or submitted
+  ---
+  duration_ms: 1.4152
+  type: 'test'
+  ...
+# Subtest: metadata reads 30 seconds from fal and ignores forged client duration/resolution
+ok 124 - metadata reads 30 seconds from fal and ignores forged client duration/resolution
+  ---
+  duration_ms: 294.1592
+  type: 'test'
+  ...
+# Subtest: metadata limits one IP to 20 requests in a sliding minute
+ok 125 - metadata limits one IP to 20 requests in a sliding minute
+  ---
+  duration_ms: 58.6091
+  type: 'test'
+  ...
+# Subtest: metadata accepts a sixty-second trial upload and reports a five-second preview
+ok 126 - metadata accepts a sixty-second trial upload and reports a five-second preview
+  ---
+  duration_ms: 5.0581
+  type: 'test'
+  ...
+# Subtest: forwarded IP spoofing does not bypass the limiter on an untrusted origin
+ok 127 - forwarded IP spoofing does not bypass the limiter on an untrusted origin
+  ---
+  duration_ms: 59.0083
+  type: 'test'
+  ...
+# Subtest: a sliding window expires correctly without allowing a minute-boundary burst
+ok 128 - a sliding window expires correctly without allowing a minute-boundary burst
+  ---
+  duration_ms: 0.2207
+  type: 'test'
+  ...
+# Subtest: metadata rejects invalid URLs before calling fal
+ok 129 - metadata rejects invalid URLs before calling fal
+  ---
+  duration_ms: 14.7468
+  type: 'test'
+  ...
+# Subtest: metadata rejects audio, malformed provider output and unsupported containers
+ok 130 - metadata rejects audio, malformed provider output and unsupported containers
+  ---
+  duration_ms: 12.8457
+  type: 'test'
+  ...
+# Subtest: missing fal credentials return a clear 503 without accepting client metadata
+ok 131 - missing fal credentials return a clear 503 without accepting client metadata
+  ---
+  duration_ms: 4.7501
+  type: 'test'
+  ...
+# Subtest: file validation enforces strictly less than 500 MB
+ok 132 - file validation enforces strictly less than 500 MB
+  ---
+  duration_ms: 0.6828
+  type: 'test'
+  ...
+# Subtest: upload signs an immutable private R2 PUT with the exact content length
+ok 133 - upload signs an immutable private R2 PUT with the exact content length
+  ---
+  duration_ms: 10.4504
+  type: 'test'
+  ...
+# Subtest: metadata verifies the actual R2 object before asking fal
+ok 134 - metadata verifies the actual R2 object before asking fal
+  ---
+  duration_ms: 8.5262
+  type: 'test'
+  ...
+# Subtest: metadata rejects an oversized actual R2 object even if the client claimed a small file
+ok 135 - metadata rejects an oversized actual R2 object even if the client claimed a small file
+  ---
+  duration_ms: 10.8568
+  type: 'test'
+  ...
+# Subtest: multipart files stream into bounded R2 parts and return a signed read URL
+ok 136 - multipart files stream into bounded R2 parts and return a signed read URL
+  ---
+  duration_ms: 69.7422
+  type: 'test'
+  ...
+# Subtest: failed R2 part uploads abort the incomplete multipart upload
+ok 137 - failed R2 part uploads abort the incomplete multipart upload
+  ---
+  duration_ms: 3.85
+  type: 'test'
+  ...
+# Subtest: upload API is rate limited too
+ok 138 - upload API is rate limited too
+  ---
+  duration_ms: 14.936
+  type: 'test'
+  ...
+# Subtest: result pages can renew an R2 input URL without making the bucket public
+ok 139 - result pages can renew an R2 input URL without making the bucket public
+  ---
+  duration_ms: 1.7813
+  type: 'test'
+  ...
+# Subtest: video worker provides an authenticated, limited processing handler
+ok 140 - video worker provides an authenticated, limited processing handler
+  ---
+  duration_ms: 4.6011
+  type: 'test'
+  ...
+# Subtest: FFmpeg arguments burn a watermark and strictly cap size and duration without a shell
+ok 141 - FFmpeg arguments burn a watermark and strictly cap size and duration without a shell
+  ---
+  duration_ms: 0.2799
+  type: 'test'
+  ...
+# Subtest: worker rate limits and concurrent processing return Retry-After
+ok 142 - worker rate limits and concurrent processing return Retry-After
+  ---
+  duration_ms: 1.8239
+  type: 'test'
+  ...
+# Subtest: worker trims only its own R2 uploads with bounded durations and authentication
+ok 143 - worker trims only its own R2 uploads with bounded durations and authentication
+  ---
+  duration_ms: 2.1679
+  type: 'test'
+  ...
+# Subtest: trim arguments re-encode to a strict frame boundary without watermarking
+ok 144 - trim arguments re-encode to a strict frame boundary without watermarking
+  ---
+  duration_ms: 0.1029
+  type: 'test'
+  ...
+# Subtest: first visit receives a server-generated UUID in an HttpOnly cookie
+ok 145 - first visit receives a server-generated UUID in an HttpOnly cookie
+  ---
+  duration_ms: 2.6333
+  type: 'test'
+  ...
+# Subtest: a valid existing visitor cookie is reused without resetting it
+ok 146 - a valid existing visitor cookie is reused without resetting it
+  ---
+  duration_ms: 0.7864
+  type: 'test'
+  ...
+# Subtest: invalid visitor cookies are replaced and do not become a ledger identity
+ok 147 - invalid visitor cookies are replaced and do not become a ledger identity
+  ---
+  duration_ms: 0.4948
+  type: 'test'
+  ...
+# Subtest: HTTPS visitor cookies are Secure and preserve other response cookies
+ok 148 - HTTPS visitor cookies are Secure and preserve other response cookies
+  ---
+  duration_ms: 0.2941
+  type: 'test'
+  ...
+# Subtest: UUID case is canonicalized to avoid multiple ledger identities
+ok 149 - UUID case is canonicalized to avoid multiple ledger identities
+  ---
+  duration_ms: 0.1533
+  type: 'test'
+  ...
+# Subtest: middleware forwards the newly issued cookie to the current API request
+ok 150 - middleware forwards the newly issued cookie to the current API request
+  ---
+  duration_ms: 1.473
+  type: 'test'
+  ...
+# Subtest: middleware does not reset a visitor on a later page visit
+ok 151 - middleware does not reset a visitor on a later page visit
+  ---
+  duration_ms: 0.3104
+  type: 'test'
+  ...
+# Subtest: checkout can renew the same visitor identity beyond a paid pack's validity
+ok 152 - checkout can renew the same visitor identity beyond a paid pack's validity
+  ---
+  duration_ms: 0.2249
+  type: 'test'
+  ...
+1..152
+# tests 152
+# suites 0
+# pass 151
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 10268.8766

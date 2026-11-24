@@ -1,0 +1,119 @@
+(node:25408) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ D1 Google login grants a single trial across repeated and concurrent logins (90.6026ms)
+✔ D1 batch failures roll back every write and its revision (4.4181ms)
+✔ D1 concurrent reservations never spend a free credit twice; refunds are idempotent (9.4121ms)
+✔ D1 limits are shared across instances and cookie changes with Retry-After (7.2711ms)
+(node:23676) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+prisma:warn Cloudflare D1 does not support transactions yet. When using Prisma's D1 adapter, implicit & explicit transactions will be ignored and run as individual queries, which breaks the guarantees of the ACID properties of transactions. For more details see https://pris.ly/d/d1-transactions
+✔ Google callback issues a secure hashed session and exactly one persistent trial grant (97.0838ms)
+✔ wrong, missing, expired and replayed OAuth state cannot log in (6.6549ms)
+✔ Google ID token signature, issuer, audience, expiry, nonce and verified email are checked (54.1702ms)
+✔ guest cookies or a forged account ID cannot upload, inspect video, submit or buy (5.9823ms)
+✔ a five-second trial succeeds once; relogin and changed visitor cookies cannot replenish it (13.7436ms)
+✔ server rejects a free upload over sixty seconds despite forged client metadata (2.8984ms)
+✔ parallel logins for one subject grant once; another Google account has its own allowance (4.2731ms)
+✔ guest balance is zero and legacy visitor IDs cannot receive new free grants (2.0429ms)
+✔ signout revokes the server session, rejects cross-site requests and does not reset the grant (4.947ms)
+✔ return destinations are restricted to local application pages (0.7673ms)
+(node:27876) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+prisma:warn Cloudflare D1 does not support transactions yet. When using Prisma's D1 adapter, implicit & explicit transactions will be ignored and run as individual queries, which breaks the guarantees of the ACID properties of transactions. For more details see https://pris.ly/d/d1-transactions
+✔ concurrent polls finalize a free video only once (225.5936ms)
+✔ finished video checkpoints survive metadata retries without repeating watermark processing (10.8336ms)
+✔ submit → poll → success persists resultUrl with real SQLite and a mock provider (14.3049ms)
+✔ another owner's cookie is rejected with 403 before contacting the provider (10.5646ms)
+✔ existing ledger credits are used without granting a second free allowance (9.2985ms)
+✔ a visitor gets one ledger grant: their second free submission returns 402 (7.0248ms)
+✔ concurrent requests cannot spend the same free credit twice (7.7555ms)
+✔ server re-probes the video and rejects free duration violations without a debit (3.6466ms)
+✔ a 60-second free upload enhances only its verified first five seconds (9.3801ms)
+✔ a nine-second upload uses the trim adapter and submits only the verified five-second clip (6.2317ms)
+✔ clips of five seconds or less are enhanced in full without a minimum upload duration (12.8631ms)
+✔ free jobs cap the provider output at 1080p before inference using verified clip dimensions (10.944ms)
+video_job_submission_failed {
+  jobId: 'uuuq3rnytqqapkladlbn7gqw',
+  stage: 'trim',
+  code: 'VIDEO_TRIM_FAILED',
+  original: { durationSec: 15, width: 640, height: 360 },
+  processedDurationSec: 5
+}
+✔ free target-resolution requests ignore forged scale and reject paid-only targets before charging (6.1941ms)
+video_job_submission_failed {
+  jobId: 'pb0dj6bu3bbw9pe6e0ky4p3q',
+  stage: 'validation',
+  code: 'TRIAL_CLIP_DURATION',
+  original: { durationSec: 15, width: 640, height: 360 },
+  clip: { durationSec: 15, width: 640, height: 360 },
+  processedDurationSec: 5
+}
+✔ a failed or oversized trim never reaches enhancement and restores the trial (13.3884ms)
+✔ trim failures identify the failed stage without exposing private URLs (4.5123ms)
+✔ oversized trial clips report measured duration and never reach enhancement (4.3285ms)
+video_job_submission_failed {
+  jobId: 'cakulkehpyztkabns2i2ct8e',
+  stage: 'submit',
+  code: 'PROVIDER_SUBMIT_FAILED',
+  original: { durationSec: 4, width: 640, height: 360 },
+  processedDurationSec: 4
+}
+✔ submission preserves safe provider errors and refunds the trial (3.557ms)
+✔ provider submission failures fail the job and refund through the ledger (6.2918ms)
+✔ a failed processing job refunds exactly once across repeated polls (6.8131ms)
+✔ free results above the output limit are rejected and refunded (9.855ms)
+✔ 20 submissions with one visitor are blocked from the fourth request (17.3777ms)
+✔ new cookies cannot bypass the IP hourly limit (33.6672ms)
+✔ a forged body visitorId cannot reset a cookie owner's ledger (3.8997ms)
+✔ recreating handlers does not reset persisted request limits (5.0786ms)
+prisma:warn Cloudflare D1 does not support transactions yet. When using Prisma's D1 adapter, implicit & explicit transactions will be ignored and run as individual queries, which breaks the guarantees of the ACID properties of transactions. For more details see https://pris.ly/d/d1-transactions
+(node:13080) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ Checkout → signed webhook → paid enhancement → result persists without using free credits (128.6272ms)
+(node:33528) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+prisma:warn Cloudflare D1 does not support transactions yet. When using Prisma's D1 adapter, implicit & explicit transactions will be ignored and run as individual queries, which breaks the guarantees of the ACID properties of transactions. For more details see https://pris.ly/d/d1-transactions
+✔ paid resolution choice charges and persists a server-calculated fractional upscale (129.7832ms)
+✔ paid submission accepts longer footage, removes watermark, and persists the output (13.1566ms)
+✔ paid intent or body visitorId never grants paid access without settled credit (3.3286ms)
+✔ 4K is charged from actual scaled output even if the client claims 1080p (5.1038ms)
+video_job_submission_failed {
+  jobId: 'py4i59xfdoufzzhvmuo8mg7c',
+  stage: 'submit',
+  code: 'PROVIDER_SUBMIT_FAILED',
+  original: { durationSec: 30, width: 960, height: 540 },
+  processedDurationSec: 30
+}
+✔ paid balances exclude pending, expired, and legacy orders without expiry (6.8161ms)
+✔ paid spends cannot consume a free credit and free spends cannot consume paid time (13.2539ms)
+✔ a job can spend multiple orders FIFO and failed processing refunds those same pools exactly once (11.7519ms)
+✔ concurrent paid jobs cannot spend the same three credits twice (7.6081ms)
+✔ refund debt on a refunded or expired order offsets new paid purchases (6.4824ms)
+✔ a failed submission refunds paid time but does not issue a free allowance (8.3745ms)
+✔ fal frame counts expose an understated frame rate instead of trusting client fps (1.5354ms)
+✔ a paid result larger than its server quote is failed and refunded (6.7797ms)
+✔ missing or high server fps prevents paid submissions before any debit (6.0705ms)
+✔ processing failure after a grant expires records a refund without restoring spendable time (8.7279ms)
+✔ settled refund debt is not charged again when the paying order expires (10.7072ms)
+(node:26504) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+prisma:warn Cloudflare D1 does not support transactions yet. When using Prisma's D1 adapter, implicit & explicit transactions will be ignored and run as individual queries, which breaks the guarantees of the ACID properties of transactions. For more details see https://pris.ly/d/d1-transactions
+✔ Checkout uses only configured prices and cookie identity, and never grants credits before payment (99.6594ms)
+✔ missing Stripe keys return an explicit 503 without creating an order (5.1437ms)
+✔ Checkout refuses real charging when webhook configuration is missing (4.6ms)
+✔ signed paid webhook grants once across duplicate and concurrent events (15.5093ms)
+✔ forged signatures, prices, currencies, order IDs and session IDs cannot grant credits (6.6977ms)
+✔ partial and full refunds revoke only the new cumulative amount; paid replay never restores refunded credits (13.6156ms)
+✔ refund delivered before paid cannot be lost or followed by a full grant (8.5815ms)
+✔ unknown refunds are retryable and unknown event types are harmless (2.0868ms)
+✔ a refund with a mismatched payment intent, amount or currency never revokes credits (8.6796ms)
+✔ signed webhook body size is bounded before parsing and no visitor cookie is issued (1.4652ms)
+✔ checkout has persistent visitor and IP throttles with Retry-After (8.3148ms)
+ℹ tests 65
+ℹ suites 0
+ℹ pass 65
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4406.9323

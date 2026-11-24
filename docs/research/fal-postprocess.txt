@@ -1,0 +1,6 @@
+Verified official docs in Microsoft Edge on 2026-11-22.
+https://fal.ai/models/fal-ai/ffmpeg-api/compose/api supports exactly one visual track; no text watermark parameter.
+https://fal.ai/models/fal-ai/workflow-utilities/auto-subtitle/api transcribes audio; no supplied fixed text input.
+https://fal.ai/docs/documentation/development/getting-started/quick-start states Serverless deployment needs account approval; Model API access alone is insufficient.
+Use a separate authenticated FFmpeg HTTP worker for deterministic watermarking and scaling. Next.js calls it over HTTP, keeping native FFmpeg execution outside Cloudflare SSR.
+No paid inference or real video tests performed.

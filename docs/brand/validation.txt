@@ -1,0 +1,8 @@
+[PASS] Homepage HTTP 200; server-rendered brand mark and favicon links present
+[PASS] /favicon.svg: HTTP 200; image/svg+xml; 407 bytes
+[PASS] /favicon.ico: HTTP 200; image/vnd.microsoft.icon; 3815 bytes
+[PASS] /apple-touch-icon.png: HTTP 200; image/png; 3911 bytes
+[PASS] /brand/logo.svg: HTTP 200; image/svg+xml; 6518 bytes
+[PASS] /brand/logo-on-dark.svg: HTTP 200; image/svg+xml; 6518 bytes
+[PASS] /brand/icon-512.png: HTTP 200; image/png; 12938 bytes
+[PASS] /opengraph-image: HTTP 200; image/png; 37290 bytes
