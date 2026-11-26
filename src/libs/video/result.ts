@@ -2,7 +2,6 @@ import "server-only";
 import type { PrismaClient, VideoJob } from "../../generated/prisma/client";
 import { ownsJob } from "./ownership";
 import { isVideoMetadata, type VideoMetadata } from "./validate";
-import { pricing } from "../../config/pricing";
 
 export async function getOwnedResult(database: PrismaClient, id: string, token?: string, readMetadata?: (url: string) => Promise<VideoMetadata>): Promise<VideoJob | null> {
   if (!/^[\w-]{1,128}$/.test(id) || !token) return null;
@@ -24,6 +23,5 @@ export function describeResult(job: VideoJob): string {
   const increased = job.resultWidth > job.originalWidth && job.resultHeight > job.originalHeight;
   const dimensions = increased ? `resolution increased from ${job.originalWidth}x${job.originalHeight} to ${job.resultWidth}x${job.resultHeight}`
     : `original resolution ${job.originalWidth}x${job.originalHeight}, output resolution ${job.resultWidth}x${job.resultHeight}`;
-  const cap = !increased && job.isFreeTier ? ` Free previews are capped at ${pricing.free.maxOutputHeight}p and include a watermark.` : "";
-  return `${scope}Your video has been enhanced: ${dimensions}.${cap}`;
+  return `${scope}Your video has been enhanced: ${dimensions}.`;
 }

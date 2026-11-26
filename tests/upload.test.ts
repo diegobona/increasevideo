@@ -64,7 +64,7 @@ test("metadata reads 30 seconds from fal and ignores forged client duration/reso
   assert.equal(body.validation.ok, true);
   assert.equal(body.data.previewDurationSec, 5);
   assert.equal(body.data.outputOptions.free["1080p"].outputWidth, 1920);
-  assert.equal(body.data.outputOptions.free["1440p"].ok, false);
+  assert.deepEqual(body.data.outputOptions.free["1440p"], { ok: true, scale: 2, outputWidth: 2560, outputHeight: 1440 });
   assert.equal(body.data.outputOptions.free["2160p"].ok, false);
   assert.equal(body.data.outputOptions.paid["1440p"].creditsRequired, 4);
   assert.equal(body.data.outputOptions.paid["2160p"].creditsRequired, 8);

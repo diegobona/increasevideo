@@ -106,7 +106,7 @@ export function ResultVariantControls({ options }: { options: ReturnType<typeof 
         onClick={() => { if (quote.ok) state.start(variant, label, quote.creditsRequired); }}>
         {label}{quote.ok && <> · {quote.creditsRequired} paid credits</>}
       </button>
-      <small>{quote.ok ? `${quote.outputWidth} × ${quote.outputHeight}${variant === "denoise" ? " · original frame size" : ""}` : "Unavailable for this source’s dimensions or processing limits."}</small>
+      <small>{quote.ok ? `${quote.outputWidth} × ${quote.outputHeight}` : "Unavailable for this source’s dimensions or processing limits."}</small>
     </div>)}</div>
     <div className="result-variant-status" role="status" aria-live="polite">
       {state.busy && <span className="result-working" aria-hidden="true" />}{state.message}

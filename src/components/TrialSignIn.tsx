@@ -8,7 +8,7 @@ export default function TrialSignIn() {
     <h2>Try increasing video quality<br /> on your own clip</h2>
     <p>Sign in with Google to get {pricing.free.initialCredits} free video trial. Upload up to {pricing.free.maxUploadDurationSec} seconds; we automatically enhance the first {pricing.free.maxDurationSec} seconds for you to compare.</p>
     <a className="google-button" href="/auth/google"><span className="google-mark" aria-hidden="true">G</span>Continue with Google</a>
-    <p className="free-note">{pricing.free.initialCredits} trial per Google account · up to {pricing.free.maxDurationSec} seconds · {pricing.free.maxOutputHeight}p max · watermark included</p>
+    <p className="free-note">{pricing.free.initialCredits} trial per Google account · up to {pricing.free.maxDurationSec} seconds · {pricing.free.maxOutputLabel} max · watermark included</p>
     <p className="clip-test-note">No guest uploads. No card needed. Signing in again does not reset your trial.</p>
   </div>;
 }

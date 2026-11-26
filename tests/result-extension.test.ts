@@ -38,13 +38,13 @@ async function fixture(paid = true) {
   }
   return db.videoJob.create({ data: { id: "source-result", visitorId: account, ownerToken: token, status: "SUCCEEDED", originalUrl: sourceUrl, resultUrl: outputUrl,
     originalDurationSec: 9, processedDurationSec: 5, originalWidth: 960, originalHeight: 540, originalFps: 30,
-    resultWidth: 1920, resultHeight: 1080, scale: 2, denoise: false, watermark: true, isFreeTier: true } });
+    resultWidth: 1920, resultHeight: 1080, scale: 2, denoise: true, watermark: true, isFreeTier: true } });
 }
 const submit = (body: object, cookie = accountCookie(account)) => new Request("http://localhost/api/jobs", {
   method: "POST", headers: { "Content-Type": "application/json", Cookie: cookie }, body: JSON.stringify(body),
 });
 
-for (const variant of ["1080p", "2160p", "denoise"] as ResultVariant[]) {
+for (const variant of ["1080p", "2160p"] as ResultVariant[]) {
   test(`${variant}: reuse original, force paid, debit once, poll to verified output without spending trial`, async () => {
     const source = await fixture();
     const metadata = { durationSec: 9, width: 960, height: 540, fps: 30 };
@@ -55,13 +55,18 @@ for (const variant of ["1080p", "2160p", "denoise"] as ResultVariant[]) {
       async refreshSource(url) { assert.equal(url, sourceUrl); return refreshedUrl; },
       async readMetadata(url) { assert.ok([refreshedUrl, outputUrl].includes(url)); return url === outputUrl ? { ...metadata, width: quote.outputWidth, height: quote.outputHeight } : metadata; },
       provider: {
-        async submitUpScale(input) { submissions++; assert.deepEqual(input, { videoUrl: refreshedUrl, scale: quote.scale, denoise: variant === "denoise", watermark: false }); return { jobId: "mock-provider" }; },
+        async submitUpScale(input) {
+          submissions++;
+          assert.deepEqual(input, { videoUrl: refreshedUrl, scale: quote.scale, watermark: false });
+          return { jobId: "mock-provider" };
+        },
         async getJobStatus() { return { status: "SUCCEEDED", resultUrl: outputUrl }; },
       },
     });
     const response = await handlers.POST(submit({ sourceJobId: source.id, variant, maxCredits: quote.creditsRequired, tier: "FREE", url: "https://attacker.example/video.mp4", scale: 999, denoise: true, durationSec: 1 }));
     assert.equal(response.status, 200);
     const data = (await response.json()).data;
+    assert.equal((await db.videoJob.findUniqueOrThrow({ where: { id: data.jobId } })).denoise, false);
     assert.equal(data.tier, "PAID"); assert.equal(data.processedDurationSec, 9); assert.equal(data.creditsCharged, quote.creditsRequired);
     const cookie = response.headers.getSetCookie().find((cookie) => cookie.startsWith("ownerToken="))!.split(";")[0];
     const request = () => new Request(`http://localhost/api/jobs/${data.jobId}`, { headers: { Cookie: cookie } });
@@ -82,6 +87,9 @@ test("variants require login and ownership; free balance cannot fund a paid vari
     async submitUpScale() { throw new Error("must not submit"); }, async getJobStatus() { throw new Error("must not poll"); },
   } });
   const body = { sourceJobId: source.id, variant: "1080p", maxCredits: 1 };
+  const retired = await handlers.POST(submit({ ...body, variant: "denoise" }));
+  assert.equal(retired.status, 400);
+  assert.equal((await retired.json()).code, "INVALID_VARIANT");
   assert.equal((await handlers.POST(submit(body, ""))).status, 401);
   await seedAccount(db, "someone-else");
   assert.equal((await handlers.POST(submit(body, accountCookie("someone-else")))).status, 403);

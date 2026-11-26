@@ -6,9 +6,13 @@ const outputResolutions = [
   { id: "1440p", label: "2K", detail: "1440p", width: 2560, height: 1440, creditMultiplier: 1.25 },
   { id: "2160p", label: "4K", detail: "Ultra HD", width: 3840, height: 2160, creditMultiplier: 2.5 },
 ] as const;
-const [fullHd, , ultraHd] = outputResolutions;
+const [fullHd, quadHd, ultraHd] = outputResolutions;
 
-export const FREE = { credits: 1, maxUploadDurationSec: 60, maxDurationSec: 5, maxHeight: 1080, maxWidth: 1920, watermark: true } as const;
+export const FREE = {
+  credits: 1, maxUploadDurationSec: 60, maxDurationSec: 5, watermark: true,
+  maxInputHeight: fullHd.height, maxInputWidth: fullHd.width,
+  maxOutputHeight: quadHd.height, maxOutputWidth: quadHd.width, maxOutputLabel: quadHd.label,
+} as const;
 // Paid credits represent creditDurationSec standard output seconds, not video counts.
 export const SINGLE = { priceCents: 499, credits: 6 } as const;
 export const TRIPLE = { priceCents: 799, credits: 18 } as const;
@@ -26,7 +30,7 @@ export const pricing = {
     extensions: ["mp4", "mov", "webm"] as const,
     accept: ".mp4,.mov,.webm,video/mp4,video/quicktime,video/webm",
   },
-  free: { ...FREE, priceCents: 0, initialCredits: FREE.credits, maxOutputHeight: FREE.maxHeight, maxOutputWidth: FREE.maxWidth },
+  free: { ...FREE, priceCents: 0, initialCredits: FREE.credits },
   preview: { sampleDurationSec: 3 },
   paid: {
     billingVersion: 3,

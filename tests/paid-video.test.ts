@@ -100,7 +100,7 @@ test("paid submission accepts longer footage, removes watermark, and persists th
   assert.equal(submitted.status, 200);
   const { jobId, creditsCharged } = await submitted.json();
   assert.equal(creditsCharged, 3, "server-probed duration determines the charge");
-  assert.deepEqual(calls.inputs, [{ videoUrl: sourceUrl, scale: 2, denoise: true, watermark: false }]);
+  assert.deepEqual(calls.inputs, [{ videoUrl: sourceUrl, scale: 2, watermark: false }]);
   const cookie = submitted.headers.getSetCookie().find((value) => value.startsWith("ownerToken="))!.split(";")[0];
   const done = await handlers.GET(new Request(`http://localhost:3000/api/jobs/${jobId}`, { headers: { Cookie: cookie } }), { params: Promise.resolve({ id: jobId }) });
   assert.equal((await done.json()).status, "SUCCEEDED");

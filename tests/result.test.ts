@@ -53,7 +53,7 @@ test("a capped result does not claim its resolution increased", async () => {
   const description = describeResult({ ...job, originalWidth: 1280, originalHeight: 720 });
   assert.doesNotMatch(description, /resolution increased/);
   assert.match(description, /1280x720/);
-  assert.match(description, /1080p/);
+  assert.doesNotMatch(description, /capped at/);
 });
 
 test("missing jobs and incorrect owner tokens cannot read result details", async () => {

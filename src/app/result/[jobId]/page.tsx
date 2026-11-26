@@ -51,7 +51,7 @@ export default async function ResultPage({ params }: { params: Promise<{ jobId: 
         {complete && !originalExpired && <ResultWorkspace originalUrl={originalUrl} originalSize={`${job.originalWidth}x${job.originalHeight}`} initial={{
           jobId: job.id, label: "Original result", resultUrl: resultUrl!, resultSize: `${job.resultWidth}x${job.resultHeight}`,
           durationSec: job.processedDurationSec ?? job.originalDurationSec, description: describeResult(job), resultExpiresAt: job.resultExpiresAt?.toISOString(),
-          note: `${job.denoise ? "Noise reduction applied." : "Noise reduction was turned off."} ${job.watermark ? "Your free result includes a watermark." : "Your result has no watermark."}`,
+          note: job.watermark ? "Your free result includes a watermark." : "Your result has no watermark.",
         }}><ResultExtension job={job} /></ResultWorkspace>}
         <div className="result-next"><h2>Have another clip in mind?</h2><p>Bring another moment into focus.</p><Link className="primary-button" href="/#upload">Process another video <span aria-hidden="true">↗</span></Link></div>
       </main>

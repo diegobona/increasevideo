@@ -11,7 +11,7 @@ function setup(t: TestContext) {
   }
   return new FalProvider();
 }
-const input = { videoUrl: "https://media.example.com/source.mp4", scale: 2, denoise: true, watermark: true };
+const input = { videoUrl: "https://media.example.com/source.mp4", scale: 2, watermark: true };
 
 test("free Topaz jobs finish through the watermark worker without a custom fal model", async (t) => {
   setup(t);
@@ -25,16 +25,22 @@ test("free Topaz jobs finish through the watermark worker without a custom fal m
     if (options.method === "POST") {
       assert.equal(url, "https://queue.fal.run/topaz/upscale/video/precision");
       assert.deepEqual(JSON.parse(new Headers(options.headers).get("X-Fal-Object-Lifecycle-Preference")!), { expiration_duration_seconds: 30 * 86400 });
-      assert.equal("watermark" in JSON.parse(options.body as string), false);
+      const body = JSON.parse(options.body as string);
+      assert.equal(body.model, "Rhea");
+      assert.equal(body.noise, 0);
+      assert.equal("watermark" in body, false);
       return Response.json({ request_id: "trial-1" });
     }
     return url.endsWith("/status") ? Response.json({ status: "COMPLETED" }) : Response.json({ video: { url: "https://media.example.com/raw.mp4" } });
   });
-  const { jobId } = await provider.submitUpScale(input);
+  const previewSize = { width: 2560, height: 1440 };
+  const { jobId } = await provider.submitUpScale({ ...input, previewSize });
   const result = await provider.getJobStatus(jobId);
   assert.equal(result.status, "SUCCEEDED");
   assert.equal(result.resultUrl, "https://media.example.com/marked.mp4");
   assert.ok(result.checkpoint);
+  assert.deepEqual(result.previewSize, previewSize);
+  assert.deepEqual((await provider.getJobStatus(result.checkpoint)).previewSize, previewSize);
   assert.equal((await provider.getJobStatus(result.checkpoint)).resultUrl, result.resultUrl);
   assert.equal(finishes, 1);
 });
@@ -75,8 +81,9 @@ test("FalProvider submits the requested upscale/denoise/watermark and resolves q
     if (options.method === "POST") {
       assert.equal(url, "https://queue.fal.run/test-team/video-enhance");
       const body = JSON.parse(options.body as string);
+      assert.equal(body.model, "Proteus");
       assert.equal(body.upscale_factor, 2);
-      assert.equal(body.noise, 0.5);
+      assert.equal(body.noise, 0);
       assert.equal(body.watermark, true);
       assert.equal(body.max_height, pricing.free.maxOutputHeight);
       return Response.json({ request_id: "request-1" });
@@ -100,6 +107,7 @@ test("plain Topaz requests use documented inputs and owner/app queue URLs", asyn
       assert.equal(url, "https://queue.fal.run/topaz/upscale/video/precision");
       const body = JSON.parse(options.body as string);
       assert.equal(body.upscale_factor, 4);
+      assert.equal(body.model, "Rhea");
       assert.equal(body.noise, 0);
       assert.equal("watermark" in body, false);
       return Response.json({ request_id: "request-1" });
@@ -107,7 +115,7 @@ test("plain Topaz requests use documented inputs and owner/app queue URLs", asyn
     assert.equal(url, "https://queue.fal.run/topaz/upscale/requests/request-1/status");
     return Response.json({ status: "IN_PROGRESS" });
   });
-  const { jobId } = await provider.submitUpScale({ ...input, scale: 4, denoise: false, watermark: false });
+  const { jobId } = await provider.submitUpScale({ ...input, scale: 4, watermark: false });
   assert.deepEqual(await provider.getJobStatus(jobId), { status: "PROCESSING" });
 });
 

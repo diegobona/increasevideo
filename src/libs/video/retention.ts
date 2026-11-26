@@ -1,7 +1,7 @@
 import { pricing } from "../../config/pricing";
 
 export const dayMs = 86_400_000;
-export const retentionNotice = `New uploads are kept for ${pricing.retention.originalDays} days. Download your enhanced video within ${pricing.retention.resultDays} days.`;
+export const retentionNotice = `We keep newly uploaded originals for ${pricing.retention.originalDays} days and newly enhanced videos for ${pricing.retention.resultDays} days. Each file is automatically scheduled for deletion when its retention period ends.`;
 
 export function storedFileExpiry(url: string, kind: "originals" | "results"): Date | null {
   if (!URL.canParse(url)) return null;

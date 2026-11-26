@@ -9,7 +9,7 @@ export default function ResultExtension({ job }: { job: VideoJob }) {
   return <section className="result-extension" aria-labelledby="continue-improving" data-result-extension data-job-id={job.id}>
     <h2 id="continue-improving">Continue improving this video</h2>
     <p>Create another version here using the same original upload, without uploading again. Each option processes the full {job.originalDurationSec.toFixed(2)}-second original and spends the paid credits shown. Your existing result stays available; your free trial is not renewed.</p>
-    <p>Resolution options {job.denoise ? "keep noise reduction on" : "keep noise reduction off"}. Denoise only keeps the original frame size. Choose a version to start processing, or <Link href="/pricing">view time packs</Link>. <Link href={`/login?next=${encodeURIComponent(`/result/${job.id}`)}`}>Sign in</Link> with the Google account that created this video.</p>
+    <p>Choose a resolution to start processing, or <Link href="/pricing">view time packs</Link>. <Link href={`/login?next=${encodeURIComponent(`/result/${job.id}`)}`}>Sign in</Link> with the Google account that created this video.</p>
     <ResultVariantControls options={options} />
     <h3>A useful next step for this result</h3>
     <ul className="result-guide-list">{recommendations.map((guide) => <li key={guide.href}><Link href={guide.href} data-result-target={guide.href}>{guide.title}</Link><p>{guide.description}</p></li>)}</ul>

@@ -7,8 +7,9 @@ import { isR2Url, R2Storage } from "../r2/client";
 import { dayMs } from "./retention";
 
 export type JobStatus = "PENDING" | "PROCESSING" | "SUCCEEDED" | "FAILED";
-export type UpscaleInput = { videoUrl: string; scale: number; denoise: boolean; watermark: boolean };
-export type ProviderJobStatus = { status: JobStatus; resultUrl?: string; resultExpiresAt?: Date; error?: string; checkpoint?: string };
+type PreviewSize = { width: number; height: number };
+export type UpscaleInput = { videoUrl: string; scale: number; watermark: boolean; previewSize?: PreviewSize };
+export type ProviderJobStatus = { status: JobStatus; resultUrl?: string; resultExpiresAt?: Date; error?: string; checkpoint?: string; previewSize?: PreviewSize };
 
 export interface VideoProvider {
   submitUpScale(input: UpscaleInput): Promise<{ jobId: string }>;
@@ -16,7 +17,7 @@ export interface VideoProvider {
   assertConfigured?(watermark: boolean): void | Promise<void>;
 }
 
-type FalHandle = { model: string; requestId: string; watermark: boolean; finish?: boolean; finishedUrl?: string; submittedAt?: number };
+type FalHandle = { model: string; requestId: string; watermark: boolean; finish?: boolean; finishedUrl?: string; submittedAt?: number; previewSize?: PreviewSize };
 const precisionModel = "topaz/upscale/video/precision";
 const modelPattern = /^[\w-]+\/[\w-]+(?:\/[\w-]+)*$/;
 
@@ -68,14 +69,15 @@ export class FalProvider implements VideoProvider {
     const finish = input.watermark && !process.env.FAL_FREE_VIDEO_MODEL;
     const submittedAt = Date.now();
     const { response, data } = await this.call(`https://queue.fal.run/${model}`, {
-      video_url: validateVideoUrl(input.videoUrl), model: "Proteus",
-      upscale_factor: input.scale, noise: input.denoise ? 0.5 : 0, H264_output: true,
+      video_url: validateVideoUrl(input.videoUrl),
+      model: model === precisionModel ? "Rhea" : "Proteus",
+      upscale_factor: input.scale, noise: 0, H264_output: true,
       ...(input.watermark && !finish ? { watermark: true, watermark_text: "increasevideoquality.com", max_height: pricing.free.maxOutputHeight } : {}),
     });
     if (!response.ok || typeof data.request_id !== "string" || !/^[\w-]{1,200}$/.test(data.request_id)) {
       throw new ApiError(502, "PROVIDER_SUBMIT_FAILED", "视频增强任务提交失败，请重试");
     }
-    const handle: FalHandle = { model, requestId: data.request_id, watermark: input.watermark, submittedAt, ...(finish ? { finish: true } : {}) };
+    const handle: FalHandle = { model, requestId: data.request_id, watermark: input.watermark, submittedAt, previewSize: input.previewSize, ...(finish ? { finish: true } : {}) };
     return { jobId: Buffer.from(JSON.stringify(handle)).toString("base64url") };
   }
 
@@ -88,7 +90,7 @@ export class FalProvider implements VideoProvider {
     } catch { throw new ApiError(502, "INVALID_PROVIDER_JOB", "视频增强任务标识无效"); }
     if (handle.finishedUrl && handle.watermark && handle.finish) {
       const url = validateVideoUrl(handle.finishedUrl);
-      return { status: "SUCCEEDED", resultUrl: isR2Url(url) ? await new R2Storage().refreshDownloadUrl(url) : url };
+      return { status: "SUCCEEDED", resultUrl: isR2Url(url) ? await new R2Storage().refreshDownloadUrl(url) : url, previewSize: handle.previewSize };
     }
     // fal status/result URLs use owner/app, omitting the model's endpoint path.
     const root = `https://queue.fal.run/${handle.model.split("/").slice(0, 2).join("/")}/requests/${handle.requestId}`;
@@ -112,7 +114,7 @@ export class FalProvider implements VideoProvider {
     if (handle.watermark && handle.finish) {
       try {
         const finishedUrl = validateVideoUrl(await this.finisher.finish(resultUrl));
-        return { status: "SUCCEEDED", resultUrl: finishedUrl, checkpoint: Buffer.from(JSON.stringify({ ...handle, finishedUrl })).toString("base64url") };
+        return { status: "SUCCEEDED", resultUrl: finishedUrl, previewSize: handle.previewSize, checkpoint: Buffer.from(JSON.stringify({ ...handle, finishedUrl })).toString("base64url") };
       } catch { return { status: "FAILED", error: "视频水印或输出限制处理失败，额度已退回，请重试" }; }
     }
     // Old requests had no media-retention header. Do not invent an expiry for them.
@@ -125,7 +127,7 @@ export class FalProvider implements VideoProvider {
           if (head.ok && modified >= generatedAt && modified <= Date.now()) generatedAt = modified;
         } catch { /* Without a CDN timestamp, use submission time as a conservative deadline. */ }
       }
-      return { status: "SUCCEEDED", resultUrl, resultExpiresAt: new Date(generatedAt + pricing.retention.resultDays * dayMs) };
+      return { status: "SUCCEEDED", resultUrl, resultExpiresAt: new Date(generatedAt + pricing.retention.resultDays * dayMs), ...(handle.previewSize && { previewSize: handle.previewSize }) };
     }
     return { status: "SUCCEEDED", resultUrl };
   }

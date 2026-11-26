@@ -3,14 +3,14 @@ import { quotePaidVideo } from "../billing/quote";
 import { planResolution } from "./resolution";
 import type { VideoMetadata } from "./validate";
 
-export const resultVariants = ["1080p", "2160p", "denoise"] as const;
+export const resultVariants = ["1080p", "2160p"] as const;
 export type ResultVariant = typeof resultVariants[number];
 export function isResultVariant(value: unknown): value is ResultVariant {
   return resultVariants.some((variant) => variant === value);
 }
 
 export function quoteResultVariant(metadata: VideoMetadata, variant: ResultVariant) {
-  const output = variant === "denoise" ? { ok: true as const, scale: 1 } : planResolution(metadata, variant);
+  const output = planResolution(metadata, variant);
   if (!output.ok) return output;
   const quote = quotePaidVideo(metadata, output.scale);
   return quote.ok ? { ...quote, scale: output.scale } : quote;
@@ -19,7 +19,7 @@ export function quoteResultVariant(metadata: VideoMetadata, variant: ResultVaria
 export function resultOptions(metadata: VideoMetadata) {
   return resultVariants.map((variant) => ({
     variant,
-    label: variant === "denoise" ? "Denoise only" : pricing.outputResolutions.find((resolution) => resolution.id === variant)!.label,
+    label: pricing.outputResolutions.find((resolution) => resolution.id === variant)!.label,
     quote: quoteResultVariant(metadata, variant),
   }));
 }

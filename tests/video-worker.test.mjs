@@ -7,7 +7,8 @@ test("video worker provides an authenticated, limited processing handler", async
   assert.ok(worker?.createWorkerHandler, "video worker is not implemented");
   let rendered = 0;
   const key = "k".repeat(64);
-  const handler = worker.createWorkerHandler({ key, ready: async () => {}, render: async () => { rendered++; return new Response("test", { headers: { "content-type": "video/mp4" } }); } });
+  const sizes = [];
+  const handler = worker.createWorkerHandler({ key, ready: async () => {}, render: async (_url, _duration, limits) => { rendered++; sizes.push(limits); return new Response("test", { headers: { "content-type": "video/mp4" } }); } });
   const request = (body, token = key) => new Request("http://localhost/process", { method: "POST", headers: { Authorization: `Bearer ${token}`, "content-type": "application/json" }, body: JSON.stringify(body) });
   assert.equal((await handler(request({ videoUrl: "https://v3.fal.media/result.mp4" }, "wrong"))).status, 401);
   assert.equal((await handler(request({ videoUrl: "http://127.0.0.1/private" }))).status, 400);
@@ -15,7 +16,10 @@ test("video worker provides an authenticated, limited processing handler", async
   assert.equal(rendered, 0);
   assert.equal((await handler(request({ videoUrl: "https://v3.fal.media/result.mp4", maxHeight: 8000, maxDurationSec: 100 }))).status, 400);
   assert.equal((await handler(request({ videoUrl: "https://v3.fal.media/result.mp4" }))).status, 200);
-  assert.equal(rendered, 1);
+  assert.equal((await handler(request({ videoUrl: "https://v3.fal.media/result.mp4", maxWidth: 1920, maxHeight: 1080 }))).status, 200);
+  assert.equal((await handler(request({ videoUrl: "https://v3.fal.media/result.mp4", maxWidth: 3840, maxHeight: 2160 }))).status, 400);
+  assert.deepEqual(sizes, [{ maxWidth: 2560, maxHeight: 1440 }, { maxWidth: 1920, maxHeight: 1080 }]);
+  assert.equal(rendered, 2);
 });
 
 test("FFmpeg arguments burn a watermark and strictly cap size and duration without a shell", () => {

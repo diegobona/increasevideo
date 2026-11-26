@@ -24,7 +24,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
       {query.error === "failed" && <p className="error-message" role="alert">Sign-in was cancelled or expired. Please try again.</p>}
       {query.error === "unavailable" && available && <p className="error-message" role="alert">We could not start sign-in. Please try again shortly.</p>}
       {available ? <a className="google-button" href={`/auth/google?next=${encodeURIComponent(next)}`}><span className="google-mark" aria-hidden="true">G</span>Continue with Google</a> : <p className="payment-notice" role="status">Google sign-in is not available yet. Please check back soon.</p>}
-      <p className="free-note">Up to {pricing.free.maxOutputHeight}p · watermark included · no card required</p>
+      <p className="free-note">Up to {pricing.free.maxOutputLabel} · watermark included · no card required</p>
       <p className="clip-test-note">By continuing, you agree to our <Link href="/terms">Terms</Link> and acknowledge our <Link href="/privacy">Privacy Policy</Link>.</p>
     </section></main>;
 }

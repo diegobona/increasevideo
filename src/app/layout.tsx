@@ -8,7 +8,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: "Increase Video Quality | increasevideoquality.com",
-  description: "Enhance blurry videos online with AI upscaling and noise reduction.",
+  description: "Enhance blurry videos online and compare your original clip with the upscaled result.",
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "16x16 32x32 48x48" },

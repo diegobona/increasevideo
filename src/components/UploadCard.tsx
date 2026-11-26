@@ -19,6 +19,9 @@ type MetadataResult = VideoMetadata & { previewDurationSec: number; validation: 
 type Tier = "FREE" | "PAID";
 type ApiResult<T> = { ok: true; data: T } | { ok: false; error: string; code?: string };
 
+const previewOptions = pricing.outputResolutions.filter(({ width, height }) =>
+  width <= pricing.free.maxOutputWidth && height <= pricing.free.maxOutputHeight);
+
 function creditCost(count: number) {
   return `${count} ${count === 1 ? "credit" : "credits"}`;
 }
@@ -36,16 +39,19 @@ async function readResponse<T>(response: Response): Promise<T> {
   return result.data;
 }
 
-export default function UploadCard({ initialTier = "FREE" }: { initialTier?: Tier }) {
+export default function UploadCard() {
   const inputId = useId();
   const messageId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
   const requestRef = useRef<AbortController | null>(null);
   const [file, setFile] = useState<File | null>(null);
-  const [resolution, setResolution] = useState<OutputResolution>(pricing.outputResolutions[0].id);
+  const [paidResolution, setPaidResolution] = useState<OutputResolution>(pricing.outputResolutions[0].id);
+  const [preferredPreview, setPreferredPreview] = useState<OutputResolution>(previewOptions[0].id);
   const [balance, setBalance] = useUploadBalance();
-  const [tier, setTier] = useState<Tier>(balance.freeCredits === 0 ? "PAID" : initialTier);
-  const [denoise, setDenoise] = useState(true);
+  const hasTrial = balance.freeCredits >= pricing.enhancement.creditsPerJob;
+  const [fullVideoRequested, setFullVideoRequested] = useState(false);
+  const tier: Tier = hasTrial && !fullVideoRequested ? "FREE" : "PAID";
+  const [submittedSettings, setSubmittedSettings] = useState<{ tier: Tier; resolution: OutputResolution }>();
   const [dragging, setDragging] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
@@ -61,19 +67,24 @@ export default function UploadCard({ initialTier = "FREE" }: { initialTier?: Tie
   const [originalPreviewUrl, setOriginalPreviewUrl] = useState<string | null>(null);
   const [canRetry, setCanRetry] = useState(false);
 
+  const previewResolution = metadata && !metadata.outputOptions.free[preferredPreview]?.ok
+    ? previewOptions.findLast(({ id }) => metadata.outputOptions.free[id]?.ok)?.id ?? preferredPreview
+    : preferredPreview;
+  const resolution = tier === "FREE" ? previewResolution : paidResolution;
+  const visibleOptions = tier === "FREE" ? previewOptions : pricing.outputResolutions;
   const quote = metadata?.outputOptions.paid[resolution];
   const freeOutput = metadata?.outputOptions.free[resolution];
   const output = tier === "FREE" ? freeOutput : quote;
   const options = tier === "FREE" ? metadata?.outputOptions.free : metadata?.outputOptions.paid;
   const sizeError = sizeLimit(output);
-  const availableLabels = pricing.outputResolutions.filter((option) => options?.[option.id]?.ok).map((option) => option.label);
+  const availableLabels = visibleOptions.filter((option) => options?.[option.id]?.ok).map((option) => option.label);
   const nextChoice = availableLabels.length ? `Choose ${availableLabels.join(" or ")}.` : "Try a different video.";
   const freeAllowed = metadata?.validation.ok === true && freeOutput?.ok === true && (balance?.freeCredits ?? 0) >= pricing.enhancement.creditsPerJob;
   const paidAllowed = quote?.ok === true && (balance?.paidCredits ?? 0) >= quote.creditsRequired;
   const ready = !completed && !!metadata && (tier === "FREE" ? freeAllowed : paidAllowed);
   const eligibilityError = !metadata || completed || processing ? "" : tier === "FREE"
     ? !metadata.validation.ok ? metadata.validation.error : freeOutput && !freeOutput.ok ? freeOutput.error : !freeAllowed ? "Your free credit has been used. Choose paid enhancement and a time pack to continue." : ""
-    : quote && !quote.ok ? quote.error : quote?.ok && !paidAllowed ? `This video needs ${quote.creditsRequired} credits. Choose a time pack to continue.` : "";
+    : quote && !quote.ok ? quote.error : "";
 
   useEffect(() => () => requestRef.current?.abort(), []);
   useEffect(() => {
@@ -202,6 +213,7 @@ export default function UploadCard({ initialTier = "FREE" }: { initialTier?: Tie
     requestRef.current?.abort();
     const controller = new AbortController();
     requestRef.current = controller;
+    setSubmittedSettings({ tier, resolution });
     setProcessing(true);
     const startedAt = Date.now();
     setProgress({ phase: "PREPARING", startedAt, phaseStartedAt: startedAt });
@@ -212,7 +224,7 @@ export default function UploadCard({ initialTier = "FREE" }: { initialTier?: Tie
     try {
       const job = await readResponse<{ jobId: string }>(await fetch("/api/jobs", {
         method: "POST", credentials: "same-origin", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url: uploadedUrl, resolution, denoise, tier }), signal: controller.signal,
+        body: JSON.stringify({ url: uploadedUrl, resolution, tier }), signal: controller.signal,
       }));
       if (requestRef.current !== controller) return;
       setJobId(job.jobId);
@@ -249,7 +261,7 @@ export default function UploadCard({ initialTier = "FREE" }: { initialTier?: Tie
   if (completed && resultUrl && jobId && metadata && originalPreviewUrl) {
     return <section className="upload-card upload-result" aria-label="Your enhanced video">
       <div className="upload-card-heading"><span className="step-dot">✓</span><span>Your video is ready · 100% complete</span></div>
-      <ComparisonPlayer key={jobId} originalUrl={originalPreviewUrl} resultUrl={resultUrl} originalSize={`${metadata.width}x${metadata.height}`} durationSec={tier === "FREE" ? metadata.previewDurationSec : metadata.durationSec} downloadHref={`/result/${jobId}/download`} autoPlay initiallyExpanded />
+      <ComparisonPlayer key={jobId} originalUrl={originalPreviewUrl} resultUrl={resultUrl} originalSize={`${metadata.width}x${metadata.height}`} durationSec={submittedSettings?.tier === "FREE" ? metadata.previewDurationSec : metadata.durationSec} downloadHref={`/result/${jobId}/download`} autoPlay initiallyExpanded />
       <a className="primary-button download-button" href={`/result/${jobId}/download`} download>Download enhanced video <span aria-hidden="true">↓</span></a>
       {resultExpiresAt && <p>Download by <time dateTime={resultExpiresAt}>{deadlineLabel(resultExpiresAt)}</time>.</p>}
       <a className="another-video-button" href={`/result/${jobId}`}>More output options and tips for this video</a>
@@ -257,19 +269,19 @@ export default function UploadCard({ initialTier = "FREE" }: { initialTier?: Tie
         requestRef.current?.abort(); requestRef.current = null;
         setCompleted(false); setFile(null); setMetadata(null); setResultUrl(null); setUploadedUrl(null); setJobId(null);
         setError(""); setNotice(""); setCanRetry(false); setProcessing(false); setProgress(null); setChecking(false);
-        setResolution(pricing.outputResolutions[0].id);
-        setTier(balance?.freeCredits === 0 ? "PAID" : "FREE");
+        setPaidResolution(pricing.outputResolutions[0].id); setPreferredPreview(previewOptions[0].id);
+        setFullVideoRequested(false);
       }}>Process another video</button>
     </section>;
   }
 
   if (processing && progress && file) {
-    return <EnhancementProgress progress={progress} filename={file.name} outputLabel={pricing.outputResolutions.find((option) => option.id === resolution)?.label ?? resolution} />;
+    return <EnhancementProgress progress={progress} filename={file.name} outputLabel={pricing.outputResolutions.find((option) => option.id === submittedSettings?.resolution)?.label ?? resolution} />;
   }
 
   return (
     <form className="upload-card" onSubmit={onSubmit} aria-label="Video quality settings">
-      <div className="upload-card-heading"><span className="step-dot">01</span><span>Start with your own footage</span><span className="preview-free-badge">FREE CLIP TEST</span></div>
+      <div className="upload-card-heading"><span className="step-dot">01</span><span>Start with your own footage</span>{tier === "FREE" && <span className="preview-free-badge">FREE PREVIEW</span>}</div>
       <input ref={inputRef} id={inputId} className="visually-hidden" type="file" accept={pricing.upload.accept} disabled={processing} aria-describedby={messageId} onChange={(event) => { void chooseFile(event.target.files?.[0]); }} />
       <div className={`drop-zone${dragging ? " is-dragging" : ""}${file ? " has-file" : ""}`} onDragEnter={(event) => { event.preventDefault(); setDragging(true); }} onDragOver={(event) => { event.preventDefault(); event.dataTransfer.dropEffect = "copy"; }} onDragLeave={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setDragging(false); }} onDrop={onDrop}>
         <label htmlFor={inputId} className="drop-label">
@@ -279,39 +291,33 @@ export default function UploadCard({ initialTier = "FREE" }: { initialTier?: Tie
           <span className="file-formats">MP4, MOV, WEBM <span aria-hidden="true">·</span> UNDER {pricing.upload.maxSizeMb} MB</span>
         </label>
       </div>
-      <fieldset className="resolution-options" disabled={processing || checking}><legend>Output resolution</legend><div className="resolution-buttons">{pricing.outputResolutions.map((option) => {
-        const paidOnly = option.height > pricing.free.maxOutputHeight;
-        const limit = sizeLimit(options?.[option.id]) ?? sizeLimit(metadata?.outputOptions.paid[option.id]);
-        const locked = (tier === "FREE" && paidOnly) || !!limit;
+      <fieldset className="resolution-options" disabled={processing || checking}><legend>{tier === "FREE" ? "Preview resolution" : "Output resolution"}</legend><div className="resolution-buttons">{visibleOptions.map((option) => {
+        const plan = options?.[option.id];
+        const limit = tier === "FREE" && plan && !plan.ok ? plan : sizeLimit(plan);
+        const locked = !!limit;
         const selected = !locked && resolution === option.id;
         const price = metadata?.outputOptions.paid[option.id];
-        const caption = limit ? limit.error
-          : tier === "FREE" && !paidOnly ? "Free trial available"
-          : tier === "PAID" && price?.ok ? creditCost(price.creditsRequired) : "Paid";
-        const hint = limit ? `${limit.error} ${nextChoice}` : locked ? `Choose paid enhancement to use ${option.label}.` : undefined;
+        const caption = limit ? limit.error : tier === "FREE" ? undefined
+          : price?.ok ? creditCost(price.creditsRequired) : "Paid";
+        const hint = limit ? `${limit.error} ${nextChoice}` : undefined;
         return <label className={`resolution-choice${selected ? " selected" : ""}${locked ? " locked" : ""}`} key={option.id} title={hint}>
-          <input type="radio" name="resolution" value={option.id} disabled={locked} checked={selected} onChange={() => { setResolution(option.id); setError(""); }} />
-          <span><strong>{option.label}</strong><small>{option.detail}</small><em>{caption}</em></span>
+          <input type="radio" name="resolution" value={option.id} disabled={locked} checked={selected} onChange={() => {
+            if (tier === "FREE") setPreferredPreview(option.id); else setPaidResolution(option.id);
+            setError("");
+          }} />
+          <span><strong>{option.label}</strong><small>{option.detail}</small>{caption && <em>{caption}</em>}</span>
         </label>;
       })}</div></fieldset>
       {metadata && output?.ok && <p className="output-summary" role="status"><strong>{metadata.width} × {metadata.height} <span aria-hidden="true">→</span> {output.outputWidth} × {output.outputHeight}</strong><span>Original → expected output · original proportions preserved</span></p>}
       {metadata && sizeError && <p className="output-hint" role="status">{sizeError.error} {nextChoice}</p>}
-      {!metadata && !file && <p className="output-hint">Choose a video to see its exact output dimensions. Original proportions are preserved.</p>}
-      <div className="upload-options">
-        <label className="denoise-option"><span><strong>Reduce noise</strong><small>Clean up grainy details</small></span><input type="checkbox" role="switch" checked={denoise} disabled={processing} onChange={(event) => setDenoise(event.target.checked)} /><span className="switch-track" aria-hidden="true"><span /></span></label>
-      </div>
-      <fieldset className="tier-options" disabled={processing || checking}>
-        <legend>Try a clip first. Decide after.</legend>
-        <label className={tier === "FREE" ? "selected" : ""}><input type="radio" name="tier" value="FREE" disabled={balance?.freeCredits === 0} checked={tier === "FREE"} onChange={() => { setTier("FREE"); setResolution(pricing.outputResolutions[0].id); setError(""); }} /><span>{balance?.freeCredits === 0 ? "Trial used" : "Try a free clip"}<small>{balance?.freeCredits === 0 ? "Once per Google account" : "Compare before you buy"}</small></span></label>
-        <label className={tier === "PAID" ? "selected" : ""}><input type="radio" name="tier" value="PAID" checked={tier === "PAID"} onChange={() => { setTier("PAID"); setError(""); }} /><span>Paid enhancement<small>No watermark</small></span></label>
-      </fieldset>
-      <p className="credit-balance"><strong>Your balance:</strong> {balance.freeCredits} free job credits · {balance.paidCredits} paid credits <Link href="/pricing">View time packs</Link></p>
-      {tier === "PAID" && quote?.ok && !completed && <p className="credit-quote" role="status">This video costs <strong>{creditCost(quote.creditsRequired)}</strong>.</p>}
-      <button className="primary-button enhance-button" type="submit" disabled={checking || processing || canRetry || (!!file && !ready)} aria-busy={checking || processing}>{checking ? "Checking your video…" : processing ? "Enhancing your video…" : "Increase Video Quality"} <span aria-hidden="true">↗</span></button>
-      <p className="free-note">{tier === "FREE" ? <>Account trial: {pricing.free.initialCredits} use · up to {pricing.free.maxDurationSec} seconds · {pricing.free.maxOutputHeight}p max · {pricing.free.watermark ? "watermark included" : "no watermark"}</> : <>Paid: up to {pricing.paid.maxDurationSec / 60} minutes per video · {pricing.enhancement.maxOutputLabel} · up to {pricing.paid.maxFps} fps · no watermark</>}</p>
-      {tier === "FREE" && <p className="clip-test-note">Upload up to {pricing.free.maxUploadDurationSec} seconds. We automatically enhance only the first {pricing.free.maxDurationSec} seconds; shorter clips use their full length. Your trial includes up to {pricing.free.maxOutputHeight}p output, once per Google account. Choose paid enhancement to unlock higher resolutions.</p>}
+      {!metadata && !file && <p className="output-hint">{tier === "FREE" ? `Choose a video up to ${pricing.free.maxUploadDurationSec} seconds long.` : "Choose a video to see its credit cost."}</p>}
+      {tier === "PAID" && <p className="credit-balance">Your balance: {creditCost(balance.paidCredits)}</p>}
+      {tier === "PAID" && quote?.ok && <p className="credit-quote" role="status">Full video: <strong>{creditCost(quote.creditsRequired)}</strong>. {!paidAllowed && <Link href="/pricing">Get more credits →</Link>}</p>}
+      <button className="primary-button enhance-button" type="submit" disabled={checking || processing || canRetry || (!!file && !ready)} aria-busy={checking || processing}>{checking ? "Checking your video…" : tier === "PAID" ? "Enhance full video" : metadata && metadata.durationSec < pricing.free.maxDurationSec ? "Preview this clip for free" : `Preview the first ${pricing.free.maxDurationSec} seconds for free`} <span aria-hidden="true">↗</span></button>
+      <p className="free-note">{tier === "FREE" ? <>{balance.freeCredits} free {balance.freeCredits === 1 ? "trial" : "trials"} left · up to {pricing.free.maxOutputLabel} · {pricing.free.watermark ? "watermark included" : "no watermark"}</> : <>Paid: up to {pricing.paid.maxDurationSec / 60} minutes per video · {pricing.enhancement.maxOutputLabel} · up to {pricing.paid.maxFps} fps · no watermark</>}</p>
+      {hasTrial && <button className="another-video-button" type="button" disabled={checking || canRetry} onClick={() => { setFullVideoRequested(!fullVideoRequested); setError(""); }}>{tier === "FREE" ? "Enhance full video" : "Back to free preview"}</button>}
       {tier === "FREE" && metadata?.validation.ok && <p className="video-metadata">Your free preview: first {metadata.previewDurationSec.toFixed(2)} seconds of this {metadata.durationSec.toFixed(2)}-second upload. The rest stays unprocessed.</p>}
-      <div id={messageId} className="upload-message" aria-live="polite">{metadata && <p className="video-metadata">Verified video: {metadata.durationSec.toFixed(2)} seconds · {metadata.width} × {metadata.height}</p>}{(error || (eligibilityError && eligibilityError !== sizeError?.error)) && <p className="error-message" role="alert">{error || eligibilityError} {!error && tier === "PAID" && quote?.ok && !paidAllowed && <Link href="/pricing">See paid time packs →</Link>}</p>}{notice && <p className="notice-message">{notice}</p>}{canRetry && <button type="button" className="retry-button" onClick={() => { void retryPolling(); }}>Retry status check</button>}</div>
+      <div id={messageId} className="upload-message" aria-live="polite">{metadata && <p className="video-metadata">Verified video: {metadata.durationSec.toFixed(2)} seconds · {metadata.width} × {metadata.height}</p>}{(error || (eligibilityError && eligibilityError !== sizeError?.error)) && <p className="error-message" role="alert">{error || eligibilityError}</p>}{notice && <p className="notice-message">{notice}</p>}{canRetry && <button type="button" className="retry-button" onClick={() => { void retryPolling(); }}>Retry status check</button>}</div>
       <p className="local-note">{retentionNotice}</p>
     </form>
   );

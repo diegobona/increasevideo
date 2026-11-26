@@ -114,7 +114,7 @@ export default async function PricingPage({ searchParams }: { searchParams: Prom
           </nav>
           <div className="header-actions">
             <Link className="header-cta" href="/#upload">Try a free clip <span aria-hidden="true">↗</span></Link>
-            {balance && <Link className={styles.balance} href="/?tier=paid#upload" aria-label={`Use your ${balance.paidCredits} paid credits`}>{balance.paidCredits} credits</Link>}
+            {balance && <Link className={styles.balance} href="/#upload" aria-label={`Upload a video. Balance: ${balance.paidCredits} credits`}>{balance.paidCredits} credits</Link>}
             {account && <AccountMenu email={account.email} />}
           </div>
         </div>

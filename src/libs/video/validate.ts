@@ -36,6 +36,10 @@ export function validateFreeUpload(video: VideoMetadata & { watermark: boolean }
     ok: false, code: "FREE_LIMIT_DURATION",
     error: `免费试用可上传最长 ${pricing.free.maxUploadDurationSec} 秒的视频，系统会自动处理前 ${pricing.free.maxDurationSec} 秒；更长的视频请选择付费处理`,
   };
+  if (!fitsResolution(video.width, video.height, pricing.free.maxInputWidth, pricing.free.maxInputHeight)) return {
+    ok: false, code: "FREE_LIMIT_RESOLUTION",
+    error: `The free trial accepts uploads up to ${pricing.free.maxInputHeight}p. Choose paid enhancement for this video.`,
+  };
   return validateFreeVideo({ ...video, durationSec: Math.min(video.durationSec, pricing.free.maxDurationSec) });
 }
 

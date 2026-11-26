@@ -15,7 +15,7 @@ import type { VideoProvider } from "./provider";
 import { fitsResolution, validateFreeUpload, validateFreeVideo, validatePaidVideo, type VideoMetadata } from "./validate";
 import { trimFreeVideo } from "./trim";
 import { ownsJob, readOwnerToken, setResultCookie } from "./ownership";
-import { isOutputResolution, planResolution } from "./resolution";
+import { isOutputResolution, planResolution, scaledDimensions } from "./resolution";
 import { isResultVariant, quoteResultVariant } from "./continuation";
 import { isR2Url, R2Storage } from "../r2/client";
 import { storedFileExpiry } from "./retention";
@@ -84,19 +84,15 @@ export function createJobHandlers({ database, provider, readMetadata, trimVideo 
           if (source.status !== "SUCCEEDED") throw new ApiError(409, "RESULT_NOT_READY", "请等待当前任务完成");
           if (!Number.isSafeInteger(input.maxCredits) || (input.maxCredits as number) < 1) throw new ApiError(400, "QUOTE_REQUIRED", "请先查看本次处理所需额度");
           input.url = await refreshSource(source.originalUrl);
-          input.resolution = variant === "denoise" ? undefined : variant;
-          input.scale = variant === "denoise" ? 1 : undefined;
-          input.denoise = variant === "denoise" || source.denoise;
+          input.resolution = variant;
           input.tier = "PAID";
         }
         const url = validateVideoUrl(input.url);
         if (input.resolution !== undefined ? !isOutputResolution(input.resolution)
-          : variant !== "denoise" && (typeof input.scale !== "number" || !pricing.enhancement.scales.some((scale) => scale === input.scale))) {
+          : typeof input.scale !== "number" || !pricing.enhancement.scales.some((scale) => scale === input.scale)) {
           throw new ApiError(400, "INVALID_RESOLUTION", "请选择支持的输出分辨率");
         }
-        if (typeof input.denoise !== "boolean") throw new ApiError(400, "INVALID_DENOISE", "去噪选项必须为布尔值");
         if (input.tier !== undefined && input.tier !== "FREE" && input.tier !== "PAID") throw new ApiError(400, "INVALID_TIER", "请选择免费或付费处理");
-        const { denoise } = input;
         const resolution = isOutputResolution(input.resolution) ? input.resolution : undefined;
         const visitorId = account.id;
         const paid = input.tier === "PAID";
@@ -122,7 +118,7 @@ export function createJobHandlers({ database, provider, readMetadata, trimVideo 
             originalUrl: url, originalDurationSec: metadata.durationSec, originalWidth: metadata.width, originalHeight: metadata.height,
             processedDurationSec,
             originalFps: metadata.fps, billingVersion: paid ? pricing.paid.billingVersion : 0,
-            scale, denoise, visitorId, ownerToken, isFreeTier: !paid, watermark,
+            scale, denoise: false, visitorId, ownerToken, isFreeTier: !paid, watermark,
         };
         const job = getD1(database) ? await atomicD1(database, async () => {
           const id = createId();
@@ -162,7 +158,7 @@ export function createJobHandlers({ database, provider, readMetadata, trimVideo 
             if (clipped.durationSec > processedDurationSec) {
               throw new ApiError(502, "TRIAL_CLIP_DURATION", `系统未能将试用片段裁剪至 ${processedDurationSec} 秒，裁剪结果仍为 ${clipped.durationSec.toFixed(3)} 秒`);
             }
-            const clipValidation = validateFreeVideo({ ...clipped, watermark });
+            const clipValidation = validateFreeUpload({ ...clipped, watermark });
             if (!clipValidation.ok) {
               throw new ApiError(502, "TRIAL_CLIP_INVALID", `裁剪后的视频校验失败：${clipValidation.error}`);
             }
@@ -176,7 +172,9 @@ export function createJobHandlers({ database, provider, readMetadata, trimVideo 
             pricing.free.maxOutputWidth / Math.max(enhancementMetadata.width, enhancementMetadata.height),
             pricing.free.maxOutputHeight / Math.min(enhancementMetadata.width, enhancementMetadata.height)) * 1_000_000) / 1_000_000;
           stage = "submit";
-          submitted = await provider.submitUpScale({ videoUrl, scale: providerScale, denoise, watermark });
+          submitted = await provider.submitUpScale({ videoUrl, scale: providerScale, watermark,
+            ...(clipOutput?.ok && { previewSize: { width: clipOutput.outputWidth, height: clipOutput.outputHeight } }),
+          });
         }
         catch (error) {
           const code = error instanceof ApiError ? error.code : submissionStages[stage].code;
@@ -234,7 +232,17 @@ export function createJobHandlers({ database, provider, readMetadata, trimVideo 
             const exceedsPaidQuote = expected && (!expected.ok || !fitsResolution(actual.width, actual.height, expected.outputWidth, expected.outputHeight)
               || actual.durationSec > job.originalDurationSec + 1 / (job.originalFps || pricing.paid.maxFps));
             const exceedsFreeClip = job.isFreeTier && actual.durationSec > (job.processedDurationSec ?? pricing.free.maxDurationSec);
-            if (!validation.ok || exceedsPaidQuote || exceedsFreeClip) await failAndRefund(id, "增强结果超出已校验的处理范围，额度已退回", pollToken);
+            // A named preview must actually reach its selected size. Encoders align edges to a multiple of four.
+            let wrongPreviewSize = false;
+            if (job.isFreeTier) {
+              if (update.previewSize) {
+                wrongPreviewSize = Math.abs(actual.width - update.previewSize.width) >= 4 || Math.abs(actual.height - update.previewSize.height) >= 4;
+              } else {
+                const max = scaledDimensions({ width: job.originalWidth, height: job.originalHeight }, job.scale);
+                wrongPreviewSize = !fitsResolution(actual.width, actual.height, max.outputWidth, max.outputHeight);
+              }
+            }
+            if (!validation.ok || exceedsPaidQuote || exceedsFreeClip || wrongPreviewSize) await failAndRefund(id, "增强结果超出已校验的处理范围，额度已退回", pollToken);
             else await database.videoJob.updateMany({
               where: { id, pollToken, status: { in: ["PENDING", "PROCESSING"] } }, data: { status: "SUCCEEDED", resultUrl, resultWidth: actual.width, resultHeight: actual.height,
                 resultExpiresAt: update.resultExpiresAt ?? storedFileExpiry(resultUrl, "results") },

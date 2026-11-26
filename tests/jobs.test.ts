@@ -35,9 +35,9 @@ async function fixture() {
   await seedAccount(database, visitorUuid());
   const calls = { submit: 0, status: 0, metadata: 0 };
   const provider = {
-    async submitUpScale(input: { videoUrl: string; scale: number; denoise: boolean; watermark: boolean }) {
+    async submitUpScale(input: { videoUrl: string; scale: number; watermark: boolean }) {
       calls.submit++;
-      assert.deepEqual(input, { videoUrl: sourceUrl, scale: 2, denoise: true, watermark: true });
+      assert.deepEqual(input, { videoUrl: sourceUrl, scale: 2, watermark: true });
       return { jobId: "mock-provider-job" };
     },
     async getJobStatus() {
@@ -61,7 +61,7 @@ function visitorUuid(label = "visitor-one") {
 function submit(visitorId = "visitor-one", extra: object = {}) {
   return new Request("http://localhost:3000/api/jobs", {
     method: "POST", headers: { "Content-Type": "application/json", Cookie: `${accountCookie(visitorUuid(visitorId))}; visitorId=${visitorUuid(visitorId)}` },
-    body: JSON.stringify({ url: sourceUrl, scale: 2, denoise: true, visitorId, ...extra }),
+    body: JSON.stringify({ url: sourceUrl, scale: 2, visitorId, ...extra }),
   });
 }
 function poll(id: string, cookie: string) {
@@ -266,7 +266,7 @@ test("a nine-second upload uses the trim adapter and submits only the verified f
     provider: {
       async submitUpScale(input) {
         stages.push("enhance");
-        assert.deepEqual(input, { videoUrl: clipUrl, scale: 2.25, denoise: true, watermark: true });
+        assert.deepEqual(input, { videoUrl: clipUrl, scale: 2.25, watermark: true, previewSize: { width: 1080, height: 1440 } });
         return { jobId: "nine-second-trial" };
       },
       async getJobStatus() { return { status: "PENDING" }; },
@@ -296,8 +296,8 @@ test("clips of five seconds or less are enhanced in full without a minimum uploa
   }
 });
 
-test("free jobs cap the provider output at 1080p before inference using verified clip dimensions", async () => {
-  for (const [width, height, expectedScale] of [[640, 360, 3], [1280, 720, 1.5], [1920, 1080, 1]]) {
+test("scale-based free jobs cap inference at 2K using the verified clip dimensions", async () => {
+  for (const [width, height, expectedScale] of [[640, 360, 4], [1280, 720, 2], [1920, 1080, 1.333333]]) {
     const { database } = await fixture();
     let submitted = false;
     const handlers = createJobHandlers({
@@ -311,7 +311,7 @@ test("free jobs cap the provider output at 1080p before inference using verified
         async submitUpScale(input) {
           submitted = true;
           assert.equal(input.scale, expectedScale);
-          assert.ok(width * input.scale <= 1920 && height * input.scale <= 1080);
+          assert.ok(width * input.scale <= 2560 && height * input.scale <= 1440);
           assert.equal(input.watermark, true);
           return { jobId: "capped-job" };
         },
@@ -329,18 +329,42 @@ test("free target-resolution requests ignore forged scale and reject paid-only t
   const handlers = createJobHandlers({ database,
     async readMetadata() { return { durationSec: 5, width: 1280, height: 720 }; },
     provider: {
-      async submitUpScale(input) { submissions++; assert.equal(input.scale, 1.5); return { jobId: "target-job" }; },
+      async submitUpScale(input) { submissions++; assert.equal(input.scale, 2); return { jobId: "target-job" }; },
       async getJobStatus() { return { status: "PENDING" }; },
     },
   });
-  const rejected = await handlers.POST(submit("visitor-one", { resolution: "1440p", scale: 1, width: 1, height: 1 }));
+  const rejected = await handlers.POST(submit("visitor-one", { resolution: "2160p", scale: 1, width: 1, height: 1 }));
   assert.equal(rejected.status, 422);
   assert.equal((await rejected.json()).code, "FREE_LIMIT_RESOLUTION");
   assert.equal(await database.videoJob.count(), 0);
-  const accepted = await handlers.POST(submit("visitor-one", { resolution: "1080p", scale: 4, outputWidth: 1 }));
+  const accepted = await handlers.POST(submit("visitor-one", { resolution: "1440p", scale: 4, outputWidth: 1 }));
   assert.equal(accepted.status, 200);
   assert.equal(submissions, 1);
-  assert.equal((await database.videoJob.findFirstOrThrow()).scale, 1.5);
+  assert.equal((await database.videoJob.findFirstOrThrow()).scale, 2);
+});
+
+test("2K trials deliver the verified watermarked target or refund an incorrectly sized result", async () => {
+  const previewSize = { width: 2560, height: 1440 };
+  for (const [width, height, status] of [[2560, 1440, "SUCCEEDED"], [1920, 1080, "FAILED"], [3840, 2160, "FAILED"]] as const) {
+    const { database } = await fixture();
+    const handlers = createJobHandlers({ database,
+      async readMetadata(url) { return url === sourceUrl ? { durationSec: 5, width: 640, height: 360 } : { durationSec: 5, width, height }; },
+      provider: {
+        async submitUpScale(input) {
+          assert.deepEqual(input, { videoUrl: sourceUrl, scale: 4, watermark: true, previewSize });
+          return { jobId: "2k-trial" };
+        },
+        async getJobStatus() { return { status: "SUCCEEDED", resultUrl, previewSize }; },
+      },
+    });
+    const response = await handlers.POST(submit("visitor-one", { resolution: "1440p" }));
+    assert.equal(response.status, 200);
+    const { jobId } = await response.json();
+    const cookie = response.headers.get("set-cookie")!.split(";")[0];
+    const result = await (await handlers.GET(poll(jobId, cookie), { params: Promise.resolve({ id: jobId }) })).json();
+    assert.equal(result.status, status);
+    assert.equal(await database.creditLedger.count({ where: { id: `job_refund:${jobId}` } }), status === "FAILED" ? 1 : 0);
+  }
 });
 
 test("a failed or oversized trim never reaches enhancement and restores the trial", async () => {

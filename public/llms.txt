@@ -1,10 +1,10 @@
 # increasevideoquality.com
 
-Increase Video Quality is an online video enhancement tool for making blurry footage clearer, reducing noise, and upscaling video. Users can upload MP4, MOV, or WebM files, choose enhancement settings, compare the original with the processed result, and download the enhanced video. Google sign-in is required before uploading or processing. Each Google account receives a one-time free trial; guest trials are not available. One-time paid time packs are available; current prices and limits are listed on the pricing page. Example comparisons on the homepage are illustrative. Enhancement quality depends on the original footage.
+Increase Video Quality is an online video enhancement tool for upscaling video and comparing the result with the original. Users can upload MP4, MOV, or WebM files, choose enhancement settings, compare the original with the processed result, and download the enhanced video. Google sign-in is required before uploading or processing. Each Google account receives a one-time, watermarked trial. The [Video Upscaler guide](https://increasevideoquality.com/video-upscaler) lists supported preview resolutions and upload limits. One-time paid time packs are available; current prices and limits are listed on the pricing page. Enhancement quality depends on the original footage.
 
 ## Pages
 
-- [Home](https://increasevideoquality.com/): Upload a video, see illustrative comparisons, and read the video enhancement FAQ.
+- [Home](https://increasevideoquality.com/): Upload a video and read the video enhancement FAQ.
 - [Video Upscaler](https://increasevideoquality.com/video-upscaler): Supported uploads, output resolution choices, the account trial, and the limits of video upscaling.
 - [Fix Blurry Video](https://increasevideoquality.com/fix-blurry-video): Preview a soft phone clip before posting to TikTok, with checks for grain and motion.
 - [Restore Old Video](https://increasevideoquality.com/restore-old-video): Preserve the earliest digital source and judge restoration without losing its character.

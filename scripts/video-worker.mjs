@@ -29,14 +29,14 @@ export async function checkWorkerReady() {
   ]);
 }
 
-export function buildFfmpegArgs(durationSec, { trimOnly = false, inputFormat = "mov" } = {}) {
+export function buildFfmpegArgs(durationSec, { trimOnly = false, inputFormat = "mov", maxWidth = pricing.free.maxOutputWidth, maxHeight = pricing.free.maxOutputHeight } = {}) {
   if (!Number.isFinite(durationSec) || durationSec <= 0) throw new Error("Invalid duration");
   if (!["mov", "matroska"].includes(inputFormat)) throw new Error("Invalid input format");
   // Whole output frames prevent rounding past the free duration ceiling.
   const frames = Math.floor(Math.min(durationSec, pricing.free.maxDurationSec) * fps + 1e-6);
   if (frames < 1) throw new Error("Video is too short");
   const duration = frames / fps;
-  const ratio = `min(1\\,min(${pricing.free.maxOutputWidth}/max(iw\\,ih)\\,${pricing.free.maxOutputHeight}/min(iw\\,ih)))`;
+  const ratio = `min(1\\,min(${maxWidth}/max(iw\\,ih)\\,${maxHeight}/min(iw\\,ih)))`;
   const filters = [
     `scale=w=max(2\\,trunc(iw*${ratio}/2)*2):h=max(2\\,trunc(ih*${ratio}/2)*2)`,
     `fps=${fps}`, "setsar=1",
@@ -74,7 +74,7 @@ async function metadata(path, cwd, inputFormat = "mov") {
   return { width: video.width, height: video.height, duration };
 }
 
-async function renderVideo(videoUrl, trimDuration) {
+async function renderVideo(videoUrl, trimDuration, { maxWidth, maxHeight }) {
   const trimOnly = trimDuration !== undefined;
   const directory = await mkdtemp(join(tmpdir(), "ivq-video-"));
   const cleanup = () => rm(directory, { recursive: true, force: true }).catch(() => {});
@@ -91,12 +91,12 @@ async function renderVideo(videoUrl, trimDuration) {
     await pipeline(Readable.fromWeb(response.body), bounded, createWriteStream(join(directory, "input.mp4")));
     const input = await metadata("input.mp4", directory, inputFormat);
     if (trimOnly && (input.duration > pricing.free.maxUploadDurationSec
-      || Math.max(input.width, input.height) > pricing.free.maxOutputWidth || Math.min(input.width, input.height) > pricing.free.maxOutputHeight)) throw new Error("Input limit exceeded");
+      || Math.max(input.width, input.height) > pricing.free.maxInputWidth || Math.min(input.width, input.height) > pricing.free.maxInputHeight)) throw new Error("Input limit exceeded");
     if (!trimOnly) await Promise.all([copyFile(font(), join(directory, "watermark-font.ttf")), writeFile(join(directory, "watermark.txt"), "increasevideoquality.com", "utf8")]);
     const duration = trimOnly ? Math.min(input.duration, trimDuration) : input.duration;
-    await exec(ffmpeg(), buildFfmpegArgs(duration, { trimOnly, inputFormat }), { cwd: directory, timeout: 90_000, maxBuffer: 1_000_000, windowsHide: true });
+    await exec(ffmpeg(), buildFfmpegArgs(duration, { trimOnly, inputFormat, maxWidth, maxHeight }), { cwd: directory, timeout: 90_000, maxBuffer: 1_000_000, windowsHide: true });
     const output = await metadata("output.mp4", directory);
-    if (Math.max(output.width, output.height) > pricing.free.maxOutputWidth || Math.min(output.width, output.height) > pricing.free.maxOutputHeight || output.duration > pricing.free.maxDurationSec) throw new Error("Output limit exceeded");
+    if (Math.max(output.width, output.height) > maxWidth || Math.min(output.width, output.height) > maxHeight || output.duration > pricing.free.maxDurationSec) throw new Error("Output limit exceeded");
     if (trimOnly && output.duration > duration) throw new Error("Clip duration exceeded");
     const path = join(directory, "output.mp4");
     const file = await stat(path);
@@ -141,12 +141,17 @@ export function createWorkerHandler({ key, ready = checkWorkerReady, render = re
         body = JSON.parse(text);
         body.videoUrl = sourceUrl(body.videoUrl, path === "/trim");
         if (path === "/trim" && (!Number.isFinite(body.durationSec) || body.durationSec <= 0 || body.durationSec > pricing.free.maxDurationSec)) return json(400, "Invalid clip duration");
-        for (const [field, cap] of Object.entries({ maxHeight: pricing.free.maxOutputHeight, maxWidth: pricing.free.maxOutputWidth, maxDurationSec: pricing.free.maxDurationSec })) {
-          if (body[field] !== undefined && body[field] !== cap) return json(400, "Invalid processing limits");
-        }
+        // Honor the previous app's 1080p cap during rolling deployments.
+        body.maxWidth ??= pricing.free.maxOutputWidth;
+        body.maxHeight ??= pricing.free.maxOutputHeight;
+        if (!pricing.outputResolutions.some(({ width, height }) => width <= pricing.free.maxOutputWidth && height <= pricing.free.maxOutputHeight
+          && width === body.maxWidth && height === body.maxHeight)
+          || (body.maxDurationSec !== undefined && body.maxDurationSec !== pricing.free.maxDurationSec)) return json(400, "Invalid processing limits");
       } catch { return json(400, "Invalid provider video or processing options"); }
       active++;
-      try { return await render(body.videoUrl, path === "/trim" ? body.durationSec : undefined); } finally { active--; }
+      try {
+        return await render(body.videoUrl, path === "/trim" ? body.durationSec : undefined, { maxWidth: body.maxWidth, maxHeight: body.maxHeight });
+      } finally { active--; }
     } catch { return json(502, "Video worker unavailable or processing failed"); }
   };
 }

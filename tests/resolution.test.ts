@@ -30,7 +30,11 @@ test("target resolutions preserve portrait and non-widescreen proportions", () =
 });
 
 test("unsupported targets are rejected instead of promising a different output", () => {
-  assert.equal(planResolution(source, "1440p", true).ok, false);
+  assert.deepEqual(planResolution(source, "1440p", true), { ok: true, scale: 2, outputWidth: 2560, outputHeight: 1440 });
+  assert.equal(planResolution(source, "2160p", true).ok, false);
+  const low = { ...source, width: 480, height: 270 };
+  assert.equal(planResolution(low, "1080p", true).ok, true);
+  assert.equal(planResolution(low, "1440p", true).ok, false);
   assert.equal(planResolution({ ...source, width: 1920, height: 1080 }, "2160p").ok, true);
   assert.equal(planResolution({ ...source, width: 3840, height: 2160 }, "1080p").ok, false);
   assert.equal(planResolution({ ...source, width: 320, height: 180 }, "2160p").ok, false);

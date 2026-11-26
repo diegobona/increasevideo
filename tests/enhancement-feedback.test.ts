@@ -41,3 +41,8 @@ test("pause clamps to the shared clip length and tolerates media still loading",
   assert.equal(pauseComparison(loading, null, 5), 0);
   assert.equal(pauseComparison(null, null, 5), 0);
 });
+
+test("pausing aligned videos preserves their buffered playback position", () => {
+  const media = { get currentTime() { return 1.25; }, set currentTime(value: number) { assert.fail(`Unexpected seek to ${value}`); }, readyState: 4, pause() {} };
+  assert.equal(pauseComparison(media, media, 4), 1.25);
+});

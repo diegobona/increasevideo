@@ -15,7 +15,7 @@ export default function OpenGraphImage() {
         <div style={{ display: "flex", fontSize: 30, marginTop: 28, color: "#626957" }}>A clearer look for the videos worth keeping.</div>
       </div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 24 }}>
-        <div style={{ display: "flex", background: "#e7edce", padding: "14px 24px", borderRadius: 32 }}>Up to {pricing.enhancement.maxOutputLabel} output · Noise reduction</div>
+        <div style={{ display: "flex", background: "#e7edce", padding: "14px 24px", borderRadius: 32 }}>Up to {pricing.enhancement.maxOutputLabel} output</div>
         <div style={{ display: "flex" }}>increasevideoquality.com</div>
       </div>
     </div>,

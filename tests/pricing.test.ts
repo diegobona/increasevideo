@@ -3,7 +3,8 @@ import { test } from "node:test";
 import { FREE, PACK20, pricing, SINGLE, TRIPLE } from "../src/config/pricing";
 
 test("pricing defines the advertised free allowance and paid credit packs", () => {
-  assert.deepEqual(FREE, { credits: 1, maxUploadDurationSec: 60, maxDurationSec: 5, maxHeight: 1080, maxWidth: 1920, watermark: true });
+  assert.deepEqual(FREE, { credits: 1, maxUploadDurationSec: 60, maxDurationSec: 5, maxInputHeight: 1080, maxInputWidth: 1920,
+    maxOutputHeight: 1440, maxOutputWidth: 2560, maxOutputLabel: "2K", watermark: true });
   assert.deepEqual(SINGLE, { priceCents: 499, credits: 6 });
   assert.deepEqual(TRIPLE, { priceCents: 799, credits: 18 });
   assert.deepEqual(PACK20, { priceCents: 1999, credits: 60, requireMinPurchase: 1 });
@@ -26,7 +27,7 @@ test("existing upload and validation callers share the canonical plan settings",
   assert.equal(pricing.free.initialCredits, FREE.credits);
   assert.equal(pricing.free.maxDurationSec, FREE.maxDurationSec);
   assert.equal(pricing.free.maxUploadDurationSec, FREE.maxUploadDurationSec);
-  assert.equal(pricing.free.maxOutputHeight, FREE.maxHeight);
+  assert.equal(pricing.free.maxOutputHeight, FREE.maxOutputHeight);
   assert.equal(pricing.free.watermark, FREE.watermark);
 });
 
